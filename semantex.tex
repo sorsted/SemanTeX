@@ -1,0 +1,6020 @@
+\documentclass[a4paper,oneside,english,10pt]{memoir}
+
+\makeatletter
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\usepackage[noDcommand,slantedGreeks]{kpfonts}
+
+\frenchspacing
+
+\usepackage{mathtools,etoolbox,	microtype,color}
+
+\usepackage[shortlabels]{enumitem}%control lists
+
+\usepackage[draft]{fixme}
+
+%Setup of memoir:
+\pagestyle{plain} %change to heading for running headings
+\nouppercaseheads %running heads should not be capitalized
+\captionnamefont{\small} %captions with small font
+\captiontitlefont{\small}
+\makeevenhead{headings}{\thepage}{}{\itshape\leftmark} %make headings italic instead of slanted (though we do not use headings right now)
+\makeoddhead{headings}{\itshape\rightmark}{}{\thepage}
+
+\setlrmarginsandblock{4cm}{*}{*}
+\setulmarginsandblock{4cm}{*}{*}
+\checkandfixthelayout 
+
+\raggedbottomsectiontrue%less harse than \raggedbottom
+%\allowdisplaybreaks %long equations may break
+
+\g@addto@macro\bfseries{\boldmath} %make math in bold text automatically bold
+
+\usepackage[english=american]{csquotes}
+
+\usepackage[hidelinks]{hyperref}
+%\newcommand\hypersetup[1]{}
+%\newcommand\href[2]{\texttt{#2}}
+%\newcommand\url[1]{\texttt{#1}}
+%\newcommand\texorpdfstring[2]{#1}
+	
+\usepackage[nameinlink]{cleveref}
+
+\title{Seman\!\TeX: semantic, keyval-based mathematics (v0.513)}
+\date{\today}
+\author{Sebastian Ørsted (\href{mailto:sorsted@gmail.com}{sorsted@gmail.com})}
+
+\hypersetup{
+	pdfauthor={Sebastian Ørsted},
+	pdftitle={SemanTeX: semantic, keyval-based mathematics},
+	%pdfsubject={},
+	%pdfkeywords={},
+	%pdfproducer={Latex with hyperref, or other system},
+	%pdfcreator={pdflatex, or other tool},
+}
+
+\usepackage{showexpl}
+
+\lstset{%
+	language=[LaTeX]TeX,
+	basicstyle=\ttfamily\small,
+	commentstyle=\itshape\ttfamily\small,
+	alsoletter={\\},
+	escapechar=@,
+	breaklines=true,
+	breakindent={0pt},
+	captionpos=t,
+	pos=r,
+	tabsize=2,
+	%inputencoding=utf8,
+	explpreset={numbers=none,},
+	texcl=false,
+	wide=false,
+	width=.45\textwidth,
+}
+
+\newcommand\mylst{\lstinline[mathescape]}
+
+\let\at=@
+
+\def\<#1\>{\textrm{\textlangle\textit{#1}\textrangle}}
+
+\def\usercommand\<#1\>{\textrm{\textbackslash\textlangle\textit{#1}\textrangle}}
+
+\def\values\<#1\>{\textrm{\textlangle\textup{#1}\textrangle}}
+
+\def\num#1{\textsubscript{\textup{#1}}}
+
+\newcommand\default[1]{\smash{\underline{\smash{#1}}}}
+
+\newcommand\commandname[1]{\textbackslash\texttt{#1}}
+
+\let\pack=\texttt
+
+\newcommand\semantex{Seman\!\TeX}
+
+\newcommand\stripsemantex{\texttt{stripsemantex}}
+
+\usepackage{hologo}
+
+% Setting up SemanTeX:
+
+\usepackage{semantex}
+
+\SemantexSetup{
+	semtex file=true,
+}
+
+\usepackage{expkv}
+
+\NewVariableClass\MyVar[
+	output=\MyVar,
+]
+
+\NewObject\MyVar\va{a}
+\NewObject\MyVar\vb{b}
+\NewObject\MyVar\vc{c}
+\NewObject\MyVar\vd{d}
+\NewObject\MyVar\ve{e}
+\NewObject\MyVar\vf{f}
+\NewObject\MyVar\vg{g}
+\NewObject\MyVar\vh{h}
+\NewObject\MyVar\vi{i}
+\NewObject\MyVar\vj{j}
+\NewObject\MyVar\vk{k}
+\NewObject\MyVar\vl{l}
+\NewObject\MyVar\vm{m}
+\NewObject\MyVar\vn{n}
+\NewObject\MyVar\vo{o}
+\NewObject\MyVar\vp{p}
+\NewObject\MyVar\vq{q}
+\NewObject\MyVar\vr{r}
+\NewObject\MyVar\vs{s}
+\NewObject\MyVar\vt{t}
+\NewObject\MyVar\vu{u}
+\NewObject\MyVar\vv{v}
+\NewObject\MyVar\vw{w}
+\NewObject\MyVar\vx{x}
+\NewObject\MyVar\vy{y}
+\NewObject\MyVar\vz{z}
+
+\NewObject\MyVar\vA{A}
+\NewObject\MyVar\vB{B}
+\NewObject\MyVar\vC{C}
+\NewObject\MyVar\vD{D}
+\NewObject\MyVar\vE{E}
+\NewObject\MyVar\vF{F}
+\NewObject\MyVar\vG{G}
+\NewObject\MyVar\vH{H}
+\NewObject\MyVar\vI{I}
+\NewObject\MyVar\vJ{J}
+\NewObject\MyVar\vK{K}
+\NewObject\MyVar\vL{L}
+\NewObject\MyVar\vM{M}
+\NewObject\MyVar\vN{N}
+\NewObject\MyVar\vO{O}
+\NewObject\MyVar\vP{P}
+\NewObject\MyVar\vQ{Q}
+\NewObject\MyVar\vR{R}
+\NewObject\MyVar\vS{S}
+\NewObject\MyVar\vT{T}
+\NewObject\MyVar\vU{U}
+\NewObject\MyVar\vV{V}
+\NewObject\MyVar\vW{W}
+\NewObject\MyVar\vX{X}
+\NewObject\MyVar\vY{Y}
+\NewObject\MyVar\vZ{Z}
+
+\NewObject\MyVar\valpha{\alpha}
+\NewObject\MyVar\vvaralpha{\varalpha}
+\NewObject\MyVar\vbeta{\beta}
+\NewObject\MyVar\vgamma{\gamma}
+\NewObject\MyVar\vdelta{\delta}
+\NewObject\MyVar\vepsilon{\epsilon}
+\NewObject\MyVar\vvarepsilon{\varepsilon}
+\NewObject\MyVar\vzeta{\zeta}
+\NewObject\MyVar\veta{\eta}
+\NewObject\MyVar\vtheta{\theta}
+\NewObject\MyVar\viota{\iota}
+\NewObject\MyVar\vkappa{\kappa}
+\NewObject\MyVar\vlambda{\lambda}
+\NewObject\MyVar\vmu{\mu}
+\NewObject\MyVar\vnu{\nu}
+\NewObject\MyVar\vxi{\xi}
+\NewObject\MyVar\vpi{\pi}
+\NewObject\MyVar\vvarpi{\varpi}
+\NewObject\MyVar\vrho{\rho}
+\NewObject\MyVar\vsigma{\sigma}
+\NewObject\MyVar\vtau{\tau}
+\NewObject\MyVar\vupsilon{\upsilon}
+\NewObject\MyVar\vphi{\phi}
+\NewObject\MyVar\vvarphi{\varphi}
+\NewObject\MyVar\vchi{\chi}
+\NewObject\MyVar\vpsi{\psi}
+\NewObject\MyVar\vomega{\omega}
+
+\NewObject\MyVar\vGamma{\Gamma}
+\NewObject\MyVar\vDelta{\Delta}
+\NewObject\MyVar\vTheta{\Theta}
+\NewObject\MyVar\vLambda{\Lambda}
+\NewObject\MyVar\vXi{\Xi}
+\NewObject\MyVar\vPi{\Pi}
+\NewObject\MyVar\vSigma{\Sigma}
+\NewObject\MyVar\vUpsilon{\Upsilon}
+\NewObject\MyVar\vPhi{\Phi}
+\NewObject\MyVar\vPsi{\Psi}
+\NewObject\MyVar\vOmega{\Omega}
+
+\NewObject\MyVar\sheafF{\mathcal{F}}
+\NewObject\MyVar\sheafG{\mathcal{G}}
+\NewObject\MyVar\sheafreg{\mathcal{O}}
+\NewObject\MyVar\sheafHom{\mathop{\mathcal{H}om}}
+
+\NewObject\MyVar\Hom{\operatorname{Hom}}
+
+\NewObject\MyVar\co{H}[grading position=upper]
+
+\NewObject\MyVar\ho{H}[grading position=lower]
+
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\noindent
+The \semantex{} package for \LaTeX\ delivers a more semantic, systematized way of writing mathematics, compared to the classical math syntax in~\LaTeX.
+The system uses keyval syntax, and the user can define their own keys and customize the system down to the last detail. At the same time, care has been taken to make the syntax as simple, natural, practical, and lightweight as possible.
+
+Furthermore, the package has a companion package,
+called \stripsemantex, which allows you to completely strip
+your documents of \semantex{} markup to prepare them e.g.~for publication.
+
+The package is still in beta, but is considered feature-complete
+and more or less stable, so using it at this point should be safe.
+Still, suggestions, ideas, and bug reports are more than welcome!
+
+\setlength\cftsectionnumwidth{3em}
+
+\pagebreak
+
+\tableofcontents*
+
+\pagebreak
+
+\chapter{Introduction}
+
+\begingroup
+	\SetupClass\MyVar{
+		define keys={
+			{conj}{command=\overline},
+			{inv}{upper={-1}},
+			{inverse image}{upper={-1},no par},
+		},
+		define keys[1]={
+			{der}{upper={ (#1) } },
+			{res}{ right return, symbol put right={|}, lower={#1} },
+			{stalk}{sep lower={#1}},
+			% "sep lower" means "separator + lower", i.e. lower index
+			% separated from any previous lower index by a separator,
+			% which by default is a comma
+		},
+	}
+	
+	
+	Let us take an example from elementary analysis
+	to demonstrate the idea of the package:
+	Suppose we want to take the complex conjugate of a function~\( \vf \)
+	and then derive it \( \vn \)~times, i.e.~take~\( \smash{ \vf[conj,der=\vn] } \).
+	\semantex{} allows you to typeset this something like this:
+\begin{LTXexample}
+$ \vf[conj,der=\vn] $
+\end{LTXexample}
+	I shall explain the syntax in detail below, but some immediate comments are in order: First and foremost, the~\lstinline!v!
+	in the command names \lstinline!\vf! and~\lstinline!\vn! stands for~\enquote{variable}, so these commands are the
+	variables \( \vf \) and~\( \vn \).
+	In \semantex, it is usually best to create
+	commands \lstinline!\va!, \lstinline!\vA!, \lstinline!\vb!, \lstinline!\vB!, \ldots
+	for each variable you are using, upper- and lowercase.
+	However, it is completely up to the user how to do that and what to call them.
+	Note also that all of the keys
+	\lstinline!inv!,~\lstinline!res!,~etc.\ are defined by the
+	\emph{user}, and they can be modified and adjusted for all sorts of situations in any kinds of mathematics.
+	In other words, for the most part, you get to choose your own syntax.
+	
+	Next, suppose we want to invert a function~\( \vg \) and restrict it to a subset~\( \vU \), and then apply it to~\( \vx \),
+	i.e.~take~\( \vg[inv,res=\vU]{\vx} \). This can be done by writing
+\begin{LTXexample}
+$ \vg[inv,res=\vU]{\vx} $
+\end{LTXexample}
+	
+	Next, let us take an example from algebraic geometry:
+	Suppose \( \sheafF \)~is a sheaf and \( \vh \)~a~map,
+	and that we want to typeset the
+	equation~\( \smash{
+		\vh[inverse image]{\sheafF}[spar,
+			stalk=\vp]
+		=
+		\sheafF[stalk=\vh{\vp}]
+	} \),
+	saying that the stalk of the inverse image~\( \vh[inverse image]{\sheafF} \)
+	at the point~\( \vp \) is~\( \smash{ \sheafF[stalk=\vh{\vp}] } \).
+	This can be accomplished by typing
+\begin{LTXexample}
+$ \vh[inverse image]{\sheafF}[spar,stalk=\vp]
+=
+\sheafF[stalk=\vh{\vp}] $
+\end{LTXexample}
+Here, \lstinline!spar! (an abbreviation for~\enquote{symbol parentheses})
+is the key that adds the parentheses around~\( \vh[inverse image]{\sheafF} \).
+
+Let us see how you could set up all the above notation:
+
+\newpage
+
+\begin{lstlisting}
+\documentclass{article}
+
+\usepackage{amsmath,semantex}
+
+\NewVariableClass\MyVar % creates a new class of variables,
+												% called "\MyVar"
+
+% Now we create a couple of variables of the class \MyVar:
+\NewObject\MyVar\vf{f}
+\NewObject\MyVar\vg{g}
+\NewObject\MyVar\vh{h}
+\NewObject\MyVar\vn{n}
+\NewObject\MyVar\vp{p}
+\NewObject\MyVar\vU{U}
+\NewObject\MyVar\vx{x}
+\NewObject\MyVar\sheafF{\mathcal{F}}
+
+% Now we set up the class \MyVar:
+\SetupClass\MyVar{
+	output=\MyVar,	% This means that the output of an object
+                 	% of class \MyVar is also of class \MyVar
+	% We add a few keys for use with the class \MyVar:
+	define keys={ % we define a few keys
+		{inv}{upper={-1}},
+		{conj}{command=\overline}, % Applies \overline to the symbol
+		{inverse image}{upper={-1},no par},
+	},
+	define keys[1]={ % we define keys taking 1 value
+		{der}{upper={(#1)}},
+		{stalk}{sep lower={#1}},
+		% "sep lower" means "separator + lower", i.e. lower index
+		% separated from any previous lower index by a separator,
+		% which by default is a comma
+		{res}{ right return, symbol put right={|}, lower={#1} },
+	},
+}
+
+\begin{document}
+
+$ \vf[conj,der=\vn] $
+
+$ \vg[inv,res=\vU]{\vx} $
+
+$ \vh[inverse image]{\sheafF}[spar,stalk=\vp]
+	= \sheafF[stalk=\vh{\vp}] $
+
+\end{document}
+\end{lstlisting}
+\endgroup
+
+\chapter{Getting started}
+
+To get started using \semantex, load down the package
+with
+\begin{lstlisting}
+\usepackage{semantex}
+\end{lstlisting}
+The \semantex{} system is object-oriented; all entities are objects of some class. When you load the package, there
+is only one class by default, which is simply called \lstinline!\SemantexBaseObject!.
+You should think of this as a low-level class, the parent of all other classes. Therefore, I highly advice against using it directly or modifying it.
+Instead, we create a new, more high-level variable class.
+We choose to call it \lstinline!\MyVar!.
+It is best to always start class names with uppercase letters to separate them from objects.
+We could create this class by writing \lstinline!\NewVariableClass\MyVar!, but we choose to
+pass some options to it in~\lstinline![...]!:
+\begin{lstlisting}
+\NewVariableClass\MyVar[output=\MyVar]
+\end{lstlisting}
+This \lstinline!output=\MyVar! option will be explained better below.
+Roughly speaking, it tells \semantex{} that everything
+a variable \emph{outputs} will also be a variable.
+For instance, if the function~\lstinline!\vf! (i.e.~\( \vf \)) is of class~\lstinline!\MyVar!,
+then \lstinline!\vf{\vx}!~(i.e.~\( \vf{\vx} \))~will also be of class~\lstinline!\MyVar!.
+
+Now we have a class, but we do not have any objects.
+To create the object~\lstinline!\vf! of class~\lstinline!\MyVar! with symbol~\( f \),
+we write~\lstinline!\NewObject\MyVar\vf{f}!.
+In general, when you have class~\usercommand\<Class\>, you
+can create objects of that class wtih the syntax
+\begin{lstlisting}
+\NewObject@\usercommand\<Class\>\usercommand\<object\>@{@\<object symbol\>@}[@\<options\>@]
+\end{lstlisting}
+To distinguish objects from classes, it is a good idea to denote
+objects by lowercase letters.\footnote{We shall not follow this convention strictly, as we shall later create objects with names like~\commandname{Hom}; using lowercase letters for these would just look weird.}
+So after writing,
+\begin{lstlisting}
+\NewObject\MyVar\vf{f}
+\NewObject\MyVar\vx{x}
+\end{lstlisting}
+we get two variables \lstinline!\vf! and~\lstinline!\vx! with symbols \( f \) resp.~\( x \).
+Let us perform a stupid test to see if the variables work:
+\begin{LTXexample}
+$\vf$, $\vx$
+\end{LTXexample}
+Th general syntax of a variable-type object is
+\begin{lstlisting}
+@\usercommand\<object\>@[@\<options\>@]{@\<argument\>@}
+\end{lstlisting}
+Both \<options\> and \<argument\> are optional
+arguments (they can be left out if you do not need them).
+The \<options\> should consist of a list of options separated by commas, using keyval syntax. Naturally, \<argument\> is the actual argument of the function.
+
+By a design choice, \semantex{} does not distinguish between variables and functions, so all variables can take arguments.
+This makes the system easier to use; after all, it is fairly common in mathematics that something is first a variable and then a moment later takes an argument.
+So we may write:
+\begin{LTXexample}
+$\vf{1}$, $\vf{\vx}$,
+$\vx{\vx}$
+\end{LTXexample}
+
+So far, we do not have very many options to write in the
+\<options\> position, since we have not added any keys yet. However, we do have access
+to the most important of all options: the \emph{index}.
+There is a simple shortcut for writing an index: You simply write the index itself in the options tag:
+\begin{LTXexample}
+$\vf[1]$, $\vf[\vf]$,
+$\vf[1,2,\vf]{2}$
+\end{LTXexample}
+As long as what you write in the options tag is not recognized as a defined key, it will be printed as the index.
+Other than that, there are two important predefined keys: \lstinline!upper! and \lstinline!lower! which simply add something to the upper and lower index:
+\begin{LTXexample}
+$\vf[upper=2]$,
+$\vf[lower=3]$
+\end{LTXexample}
+
+In fact, there are quite a few keys for manipulating upper and lower indices.
+Right now, apart from \lstinline!upper! and~\lstinline!lower!,
+we shall only need a couple more:
+\lstinline!sep upper! and~\lstinline!sep lower! mean
+\enquote{separator~+~upper} and \enquote{separator~+~lower}.
+These are like \lstinline!upper! and~\lstinline!lower!,
+but if there already was an upper or lower index,
+the new index will be separated from the old one by a separator.
+By default, this separator is a comma.
+There are also two more commands,
+\lstinline!comma upper! and~\lstinline!comma lower!.
+These will use a comma as separator, even if you have changed the
+default separator.
+
+\newpage
+
+\section{Next step: Defining more variables}
+
+We are soon going to need more variables
+than just \( \vf \) and~\( \vx \).
+In fact, I advise you to create a variable for each letter in the Latin and Greek alphabets, both uppercase and lowercase.
+This is pretty time-consuming, so I did it for you already:
+\begin{lstlisting}
+\NewObject\MyVar\va{a}
+\NewObject\MyVar\vb{b}
+\NewObject\MyVar\vc{c}
+\NewObject\MyVar\vd{d}
+\NewObject\MyVar\ve{e}
+\NewObject\MyVar\vf{f}
+\NewObject\MyVar\vg{g}
+\NewObject\MyVar\vh{h}
+\NewObject\MyVar\vi{i}
+\NewObject\MyVar\vj{j}
+\NewObject\MyVar\vk{k}
+\NewObject\MyVar\vl{l}
+\NewObject\MyVar\vm{m}
+\NewObject\MyVar\vn{n}
+\NewObject\MyVar\vo{o}
+\NewObject\MyVar\vp{p}
+\NewObject\MyVar\vq{q}
+\NewObject\MyVar\vr{r}
+\NewObject\MyVar\vs{s}
+\NewObject\MyVar\vt{t}
+\NewObject\MyVar\vu{u}
+\NewObject\MyVar\vv{v}
+\NewObject\MyVar\vw{w}
+\NewObject\MyVar\vx{x}
+\NewObject\MyVar\vy{y}
+\NewObject\MyVar\vz{z}
+
+\NewObject\MyVar\vA{A}
+\NewObject\MyVar\vB{B}
+\NewObject\MyVar\vC{C}
+\NewObject\MyVar\vD{D}
+\NewObject\MyVar\vE{E}
+\NewObject\MyVar\vF{F}
+\NewObject\MyVar\vG{G}
+\NewObject\MyVar\vH{H}
+\NewObject\MyVar\vI{I}
+\NewObject\MyVar\vJ{J}
+\NewObject\MyVar\vK{K}
+\NewObject\MyVar\vL{L}
+\NewObject\MyVar\vM{M}
+\NewObject\MyVar\vN{N}
+\NewObject\MyVar\vO{O}
+\NewObject\MyVar\vP{P}
+\NewObject\MyVar\vQ{Q}
+\NewObject\MyVar\vR{R}
+\NewObject\MyVar\vS{S}
+\NewObject\MyVar\vT{T}
+\NewObject\MyVar\vU{U}
+\NewObject\MyVar\vV{V}
+\NewObject\MyVar\vW{W}
+\NewObject\MyVar\vX{X}
+\NewObject\MyVar\vY{Y}
+\NewObject\MyVar\vZ{Z}
+
+\NewObject\MyVar\valpha{\alpha}
+\NewObject\MyVar\vvaralpha{\varalpha}
+\NewObject\MyVar\vbeta{\beta}
+\NewObject\MyVar\vgamma{\gamma}
+\NewObject\MyVar\vdelta{\delta}
+\NewObject\MyVar\vepsilon{\epsilon}
+\NewObject\MyVar\vvarepsilon{\varepsilon}
+\NewObject\MyVar\vzeta{\zeta}
+\NewObject\MyVar\veta{\eta}
+\NewObject\MyVar\vtheta{\theta}
+\NewObject\MyVar\viota{\iota}
+\NewObject\MyVar\vkappa{\kappa}
+\NewObject\MyVar\vlambda{\lambda}
+\NewObject\MyVar\vmu{\mu}
+\NewObject\MyVar\vnu{\nu}
+\NewObject\MyVar\vxi{\xi}
+\NewObject\MyVar\vpi{\pi}
+\NewObject\MyVar\vvarpi{\varpi}
+\NewObject\MyVar\vrho{\rho}
+\NewObject\MyVar\vsigma{\sigma}
+\NewObject\MyVar\vtau{\tau}
+\NewObject\MyVar\vupsilon{\upsilon}
+\NewObject\MyVar\vphi{\phi}
+\NewObject\MyVar\vvarphi{\varphi}
+\NewObject\MyVar\vchi{\chi}
+\NewObject\MyVar\vpsi{\psi}
+\NewObject\MyVar\vomega{\omega}
+
+\NewObject\MyVar\vGamma{\Gamma}
+\NewObject\MyVar\vDelta{\Delta}
+\NewObject\MyVar\vTheta{\Theta}
+\NewObject\MyVar\vLambda{\Lambda}
+\NewObject\MyVar\vXi{\Xi}
+\NewObject\MyVar\vPi{\Pi}
+\NewObject\MyVar\vSigma{\Sigma}
+\NewObject\MyVar\vUpsilon{\Upsilon}
+\NewObject\MyVar\vPhi{\Phi}
+\NewObject\MyVar\vPsi{\Psi}
+\NewObject\MyVar\vOmega{\Omega}
+\end{lstlisting}
+
+Just like~\lstinline!\vf!, these can all be regarded as functions, so~\lstinline!\va{\vb}!~produces~\( \va{\vb} \).
+Importantly,
+\textbf{parentheses can be scaled}.
+To make parentheses bigger, use the following keys:
+\begin{LTXexample}
+$\vf{\vx}$,
+$\vf[par=\big]{\vx}$,
+$\vf[par=\Big]{\vx}$,
+$\vf[par=\bigg]{\vx}$,
+$\vf[par=\Bigg]{\vx}$,
+$\vf[par=auto]{\frac{1}{2}}$
+\end{LTXexample}
+Using \lstinline!par=auto! corresponds to using \lstinline!\left ...\right!. Just as for ordinary math, I advice you to use manual scaling rather than automatic scaling, as \TeX\ has a tendency to scale things wrong. If you do not want parentheses at all, you can pass the key~\mbox{\lstinline!no par!} (it will still print parentheses if there is more than one argument, though; to exclude this behaviour, run~\lstinline!never par! instead):
+\begin{LTXexample}
+$\vf[no par]{\vx}$,
+$\vf[no par]{\vx,\vy}$,
+$\vf[never par]{\vx}$,
+$\vf[never par]{\vx,\vy}$
+\end{LTXexample}
+Primes are added via the key~\lstinline!prime!
+or the keys~\lstinline!'!,~\lstinline!''! and~\lstinline!'''!:
+\begin{LTXexample}
+$\vf['] = \vf[prime]$,
+$\vf[''] = \vf[prime,prime]$,
+$\vf['''] = \vf[prime,prime,prime]$
+\end{LTXexample}
+
+\begingroup\color{red}%
+For the rest of the manual, we assume that you have already defined a class~\lstinline!\MyVar! and the variables~\lstinline!\va!, \lstinline!\vA!, \lstinline!\vb!, \lstinline!\vB!, \ldots, as above.
+\endgroup
+
+\section{Defining keys}
+
+So far, so good, but our variables cannot really do anything yet. For this, we need to assign \emph{keys} to them. The more pieces of math notation you need, the more keys you will have to define.
+To define keys, we use the command~\lstinline!\SetupClass!
+(or~\lstinline!\SetupObject! if you want to define it for an individual object)
+and the key~\lstinline!define keys!.
+The syntax is as follows:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{@\<key name\num{1}\>@}{ @\<keys to run\>@ },
+		{@\<key name\num{2}\>@}{ @\<keys to run\>@ },
+		{@\<key name\num{3}\>@}{ @\<keys to run\>@ },
+		@\ldots,@
+	},
+}
+\end{lstlisting}
+For instance, you can do
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{key1}{ upper=3, lower=7 },
+		{key2}{ lower=6, upper=4 },
+	},
+}
+\end{lstlisting}
+
+Quite often, we shall also need to define
+keys that can \emph{take a value}.
+A key can take up to~\( 8 \)~values (for technical reasons, \( 9 \)~values are not allowed).
+To define a key taking \( n \)~values,
+use~\mylst!define keys[$n$]!
+for~\( n = 0 , 1 , 2 , \ldots , 8 \).
+The syntax is similar to~\lstinline!define keys!,
+except the values can be accessed
+by writing~\lstinline!#1!, \lstinline!#2!, \ldots, \lstinline!#8!.
+Except for a few special cases, you will probably only
+ever need~\lstinline!define keys[1]!. So you can do
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{key3}{ upper=\{#1\} },
+		{key4}{ lower=(#1) },
+	},
+	define keys[2]={
+		{key5}{ upper=3+#1, lower=7-#2 },
+		{key6}{ lower=6\cdot#1, upper=4/#2 },
+	},
+}
+\end{lstlisting}
+\begingroup
+\SetupClass\MyVar{
+	define keys={
+		{key1}{ upper=3, sep lower=7 },
+		{key2}{ lower=6, sep upper=4 },
+	},
+	define keys[1]={
+		{key3}{ sep upper=\{#1\} },
+		{key4}{ sep lower=(#1) },
+	},
+	define keys[2]={
+		{key5}{ sep upper=3+#1, sep lower=7-#2 },
+		{key6}{ sep lower=6\cdot#1, sep upper=4/#2 },
+	},
+}
+Let us see these rather ridiculous keys in action:
+
+\begin{LTXexample}
+$ \vP[key1,key3=0,key5={3}{4}] $
+\end{LTXexample}
+
+\endgroup
+
+\chapter{Some examples}
+
+\section{Example: Elementary calculus}
+
+One thing we might want to do to a variable
+is \emph{invert} it. We therefore add a key~\lstinline!inv!
+that adds an upper index~\lstinline!-1! to the symbol.
+We add this key using the key \lstinline!define keys!
+since there is no reason for this key to take a value:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{inv}{ upper={-1} },
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+define keys={
+	{inv}{ upper={-1} },
+},
+}
+Now the key \lstinline!inv!
+has been defined to be equivalent to \lstinline!upper={-1}!.
+Now we can do the following:
+\begin{LTXexample}
+$\va[inv]$, $\vf[inv]$,
+$\vg[1,2,inv]$,
+$\vh[\va,\vb,inv]$
+\end{LTXexample}
+
+Other keys might need to take one value.
+For defining these, we use a different key, \lstinline!define keys[1]!.
+For instance, suppose we want a command for deriving a function \( n \)~times.
+For this, we add the key~\lstinline!der!:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{inv}{ upper={-1} },
+	},
+	define keys[1]={
+		{der}{ upper={(#1)} },
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+define keys[1]={
+	{der}{ upper={(#1)} },
+},
+}
+The~\lstinline!#1! will contain whatever the
+user wrote as the value of the key.
+Now we can write:
+\begin{LTXexample}
+$\vf[der=\vn]{\vx}$
+\end{LTXexample}
+Maybe we also want a more elementary key~\lstinline!power! for raising a variable to a power:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{inv}{ upper={-1} },
+	},
+	define keys[1]={
+		{der}{ upper={(#1)} },
+		{power}{ upper={#1} },
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{power}{ upper={#1} },
+	},
+}
+This allows us to write
+\begin{LTXexample}
+$\vx[power=2]$,
+$\vy[1,power=2] + \vy[2,power=2]$
+\end{LTXexample}
+
+Let us try doing something a bit more complicated: adding a key for restricting a function to a smaller subset.
+For this, we do the following:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{inv}{ upper={-1} },
+	},
+	define keys[1]={
+		{der}{ upper={(#1)} },
+		{power}{ upper={#1} },
+		{res}{ right return,symbol put right={|}, lower={#1} },
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{res}{ right return,symbol put right={|}, lower={#1} },
+	},
+}
+This adds a horizonal line~\enquote{$|$}
+to the right of the symbol followed by
+a lower index containing whatever you passed to the key
+(contained in the \mbox{command~\lstinline!#1!)}.
+(There is also an extra key, \lstinline!right return!, which is a bit more advanced and should be taken for granted for now. Roughly speaking, it is there to make sure that the restriction symbol is printed \emph{after} all indices that you might have added before. More details in \cref{ch:return}.)
+Now we may write the following:
+\begin{LTXexample}
+$\vf[res=\vU]{\vx}$,
+$\vg[1,res=\vY]{\vy}$,
+$\vh[inv,res=\vT]{\vz}$
+\end{LTXexample}
+
+If the reader starts playing around with the \semantex{} functions, they will discover that whenever you apply a function to something, the result becomes a new function that can take an argument itself (this is why we wrote~\lstinline!output=\MyVar! in the definition of the class~\lstinline!\MyVar!). This behaviour is both useful and extremely necessary in order for the package to be useful in practice. For instance, you may write
+\begin{LTXexample}
+$\vf[der=\vn]{\vx}{\vy}{\vz}
+=\vg{\vu,\vv,\vw}[3]{
+	\vx[1],\vx[2]}[8,1,der=2]{
+		\vt}$
+\end{LTXexample}
+Some people prefer to be able to scale the vertical line in the restriction notation. I rarely do that, but for this purpose, we could do the following:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{big res}{ right return, symbol put right=\big|, lower={#1} },
+		{Big res}{ right return, symbol put right=\Big|, lower={#1} },
+		{bigg res}{ right return, symbol put right=\bigg|, lower={#1} },
+		{Bigg res}{ right return, symbol put right=\Bigg|, lower={#1} },
+		{auto res}{
+							 left return,
+							 symbol put left=\kern-\nulldelimiterspace,
+							 Other spar={.}{|}{auto}, symbol put left=\bgroup,
+							 symbol put right=\egroup, lower={#1},
+		},
+		% The last key auto-scales the vertical bar. See @\textit{\cref{sec:spar}}@
+		% for information about Other spar.
+		% Note that Other spar automatically invokes right return,
+		% so no need to run that key twice.
+	},
+}
+\end{lstlisting}
+
+So to sum up, we first defined a class~\lstinline!\MyVar!
+via \lstinline!\NewVariableClass! and then used \lstinline!\SetupClass! to add keys to it. In fact, we could have done it all at once by passing these options directly to \lstinline!\NewVariableClass!:
+\begin{lstlisting}
+\NewVariableClass\MyVar[
+	output=\MyVar,	% This means that the output of an object
+	                % of class \MyVar is also of class \MyVar
+	define keys={
+		{inv}{ upper={-1} },
+	},
+	define keys[1]={
+		{der}{ upper={(#1)} },
+		{power}{ upper={#1} },
+		{res}{ right return, symbol put right={|}, lower={#1} },
+	},
+]
+\end{lstlisting}
+As we proceed in this guide, we shall use \lstinline!\SetupClass!
+to add more and more keys to~\lstinline!\MyVar!. However, when you set up your own system, you may as well just add all of the keys at once like this when you create the class and then be done with it.
+
+Let me add that it is possible to create subclasses of existing classes. You just write \mylst!parent=$\usercommand\<Class\>$! in the class declaration to tell that \usercommand\<Class\> is the parent class. \textbf{But a word of warning:} It is a natural idea to create different classes for different mathematical entities, each with their own keyval syntax that fits whatever class you are in; for instance, you could have one class for algebraic structures like rings and modules with keys for opposite rings and algebraic closure, and you could have another class for topological spaces with keys for closure and interior. However, as the reader can probably imagine, this becomes extremely cumbersome to work with in practice since an algebraic structure might very well also carry a topology. So at the end of the day, I advice you to use a single superclass \lstinline!\MyVar! that has all the keyval syntax and mainly use subclasses for further customization. We shall see examples of this below.
+
+\section{Example: Elementary algebra}\label{sec:algebra}
+
+\SetupClass\MyVar{
+	define keys={
+		{poly}{
+			par, 	% This tells semantex to use parentheses around
+						% the argument in the first place, in case this
+						% had been turned off
+			left par=[,right par=],
+		},
+	},
+}
+
+Let us try to use \semantex{} to build some commands
+for doing algebra.
+As an algebraist, one of the first things you might want to do is to create polynomial rings~\( \vk[poly]{\vx,\vy,\vz} \). Since all variables can already be used as functions (this is a design choice we discussed earlier), all we need to do is find a way to change from using parentheses to square brackets. This can be done the following way:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{poly}{
+			par, 	% This tells semantex to use parentheses around
+						% the argument in the first place, in case this
+						% had been turned off
+			left par=[,right par=],
+		},
+	},
+}
+\end{lstlisting}
+Now we may write
+\begin{LTXexample}
+$\vk[poly]{\vx,\vy,\vz}$
+\end{LTXexample}
+It is straightforward how to do adjust this to instead write the \emph{field} generated by the variables~\( x, y, z \):
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{poly}{
+			par, 	% This tells semantex to use parentheses around
+						% the argument in the first place, in case this
+						% had been turned off
+			left par=[,right par=],
+		},
+		{field}{
+			par,
+			left par=(,right par=),
+		},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{field}{
+			par,
+			left par=(,right par=),
+		},
+	},
+}
+Now \lstinline!\vk[field]{\vx,\vy,\vz}! produces~\( \vk[field]{\vx,\vy,\vz} \). Of course, leaving out the \lstinline!field!
+key would produce the same result with the current configuration of the class~\lstinline!\MyVar!. However, it is still best to use a key for this, both because this makes the semantics more clear, but also because you might later change some settings that would cause the default behaviour to be different.
+
+Adding support for free algebras, power series, and Laurent series is almost as easy, but there is a catch:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{poly}{
+			par, 	% This tells semantex to use parentheses around
+						% the argument in the first place, in case this
+						% had been turned off
+			left par=[,right par=],
+		},
+		{field}{
+			par,
+			left par=(,right par=),
+		},
+		{free alg}{
+			par,
+			left par=\langle,
+			right par=\rangle,
+		},
+		{power series}{
+			par,
+			left par=\llbracket,
+			right par=\rrbracket,
+		},
+		{laurent}{
+			par,
+			left par=(, right par=),
+			pre arg={\!\mathopen{}\SemantexDelimiterSize(},
+			post arg={\SemantexDelimiterSize)\mathclose{}\!},
+			% The "pre arg" and "post arg" are printed before after
+			% the argument, if the argument is non-empty.
+			% The command "\SemantexDelimiterSize" is substituted
+			% by \big, \Big, ..., or whatever size the
+			% argument delimiters have
+		},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{free alg}{
+			par,
+			left par=\langle,
+			right par=\rangle,
+		},
+		{power series}{
+			par,
+			left par=\llbracket,
+			right par=\rrbracket,
+		},
+		{laurent}{
+			par,
+			left par=(, right par=),
+			pre arg={\!\mathopen{}\SemantexDelimiterSize(},
+			post arg={\SemantexDelimiterSize)\mathclose{}\!},
+			% These are printed before and after the argument.
+			% The command "\SemantexDelimiterSize" is substituted
+			% by \big, \Big, ..., or whatever size the
+			% argument delimiters have
+		},
+	},
+}
+See for yourself:
+\begin{LTXexample}
+$\vk[free alg]{\vx}$,
+$\vk[power series]{\vy}$,
+$\vk[laurent]{\vz}$
+\end{LTXexample}
+
+
+Let us look at some other algebraic operations that we can control via \semantex:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{op}{upper={\mathrm{op}}},
+			% opposite groups, rings, categories, etc.
+		{alg closure}{command=\overline},
+			% algebraic closure
+		{conj}{command=\overline},
+			% complex conjugation
+		{dual}{upper=*},
+			% dual vector space
+		{perp}{upper=\perp},
+			% orthogonal complement
+	},
+	define keys[1]={
+		{mod}{right return,symbol put right={/#1}},
+			% for modulo notation like R/I
+		{dom}{left return,symbol put left={#1\backslash}},
+			% for left modulo notation like I\R
+			% "dom" is "mod" spelled backwards
+		{oplus}{upper={\oplus#1}},
+			% for notation like R^{\oplus n}
+		{tens}{upper={\otimes#1}},
+			% for notation like R^{\otimes n}
+		{localize}{symbol put right={ \lbrack #1^{-1} \rbrack }},
+			% localization at a multiplicative subset;
+			% we use \lbrack and \rbrack rather than [ and ] since in some
+			% cases (using constructions like in @{\itshape\cref{ch:the_class_command}}@),
+			% the [...] might be interpreted as an optional argument.
+		{localize prime}{sep lower={#1}},
+			% for localization at a prime ideal
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{op}{upper={\mathrm{op}}},
+			% opposite groups, rings, categories, etc.
+		{alg closure}{command=\overline},
+			% algebraic closure
+		{conj}{command=\overline},
+			% complex conjugation
+		{dual}{upper=*},
+			% dual vector space
+		{perp}{upper=\perp},
+			% orthogonal complement
+	},
+	define keys[1]={
+		{mod}{symbol put right={/#1}},
+			% for modulo notation like R/I
+		{dom}{symbol put left={#1\backslash}},
+			% for left modulo notation like I\R
+			% "dom" is "mod" spelled backwards
+		{oplus}{upper={\oplus#1}},
+			% for notatoin like R^{\oplus n}
+		{tens}{upper={\otimes#1}},
+			% for notation like R^{\otimes n}
+		{localize}{symbol put right={ \lbrack #1^{-1} \rbrack }},
+			% localization at a multiplicative subset
+		{localize prime}{sep lower={#1}},
+			% for localization at a prime ideal
+	},
+}
+Let us see it in practice:
+\begin{LTXexample}
+$\vR[op]$, $\vk[alg closure]$,
+$\vz[conj]$, $\vV[dual]$,
+$\vR[mod=\vI]$,$\vR[dom=\vJ]$,
+$\vR[oplus=\vn]$,
+$\vV[tens=\vm]$,
+$\vR[localize=\vS]$,
+$\vR[localize prime=\vI]$,
+$\vk[free alg]{\vS}[op]$,
+$\vV[perp]$
+\end{LTXexample}
+
+\section{GIT quotients}
+
+\SetupClass\MyVar{
+	define keys[2]={
+		{proj quotient}{ symbol put right={ /\!\!/ _ { #1 } #2 } },
+	}
+}
+
+We include a slightly more advanced example
+to show the use of keys with more than one value.
+Sometimes, a key with one value is simply not enough. For instance, if you
+work in geometric invariant theory~(GIT), you will eventually have to take the proj
+quotient~\( \vX[proj quotient={\vchi}{\vG}] \) of~\( \vX \) with respect to the action of the group~\( \vG \) and the character~\( \vchi \). In other words, the proj quotient depends on two parameters, \( \vchi \) and~\( \vG \). For this purpose, we the the key~\lstinline!define keys[2]!:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[2]={
+		{proj quotient}{ symbol put right={ /\!\!/_{#1} #2 } },
+	}
+}
+\end{lstlisting}
+
+\begin{LTXexample}
+$ \vX[proj quotient={\vchi}{\vG}] $
+\end{LTXexample}
+
+
+\chapter{Some more techniques}
+
+\section{The \texttt{spar} key}\label{sec:spar}
+
+The \lstinline!spar! key is one of the most important commands in \semantex{} at all. To understand why we need it, imagine you want to derive a function \( \vn \)~times and then invert it. Writing something like
+\begin{LTXexample}
+$\vf[der=\vn,inv]$
+\end{LTXexample}
+does not yield a satisfactory result. However, the \lstinline!spar! key saves the day:
+\begin{LTXexample}
+$\vf[der=\vn,spar,inv]$
+\end{LTXexample}
+So \lstinline!spar! simply adds a pair of parentheses around the current symbol, complete with all indices that you may have added to it so far. The name \lstinline!spar! stands for \enquote{symbol parentheses}. You can add as many as you like:
+\begin{LTXexample}
+$ \vf[1,res=\vV,spar,conj,op,spar,0,inv,spar,mod=\vI,spar,dual]{\vx} $
+\end{LTXexample}
+If it becomes too messy, you can scale the parentheses, too. Simply use the syntax
+\lstinline!spar=\big!, \lstinline!spar=\Big!, etc.
+You can also get auto-scaled parentheses base on \lstinline!\left ...\right!,
+using the key \lstinline!spar=auto!:
+\begin{LTXexample}
+$\vf[spar]$,
+$\vf[spar=\big]$,
+$\vf[spar=\Big]$,
+$\vf[spar=\bigg]$,
+$\vf[spar=\Bigg]$,
+$\vf[spar=auto]$
+\end{LTXexample}
+So returning to the above example, we can write
+\begin{LTXexample}
+$\vf[1,res=\vV,spar,conj,op,spar=\big,0,inv,spar=\Big,mod=\vI,spar=\bigg,dual]{\vx}$
+\end{LTXexample}
+To adjust the type of brackets, use the \lstinline!left spar! and \lstinline!right spar! keys:
+\begin{LTXexample}
+$\vf[left spar={[},right spar={\}},spar,spar=\Bigg]$
+\end{LTXexample}
+Occassionally, it is useful to be able to input a particular kind of brackets just once,
+without adjusting any settings. For this purpose, we have the
+\lstinline!other spar! and~\lstinline!Other spar! keys. They use the syntax
+\begin{lstlisting}
+other spar={@\<opening bracket\>@}{@\<closing bracket\>@}
+Other spar={@\<opening bracket\>@}{@\<closing bracket\>@}{@\values\<normal|auto|*|{\textit{other}}\>@}
+\end{lstlisting}
+The last argument in \lstinline!Other spar! sets the size of the
+parentheses.
+Let us see them in action:
+\begin{LTXexample}
+$\vf[other spar={[}{)},
+	other spar={\{}{\rangle},
+	Other spar={\langle}{\rangle}{\Bigg},spar]$
+\end{LTXexample}
+
+\section{The \texorpdfstring{\texttt{$\backslash$\<Class\>}}{Class} command}\label{ch:the_class_command}
+
+So far, we have learned that every mathematical entity should be treated
+as an object of some class. However, then we run into issues the moment we
+want to write expressions like
+\[
+	\MyVar{\vf\circ\vg}[spar,der=\vn]{\vx}.
+\]
+We do not want to have to define a new variable
+with symbol~\( \vf\circ\vg \) just to write something like this.
+Fortunately, once you have created the class~\lstinline!\MyVar!,
+you can actually use~\lstinline!\MyVar! as a command to create a quick instance of the class.
+More precisely \mylst!\MyVar{$\<symbol\>$}!~creates a variable on the spot with symbol~\mylst!$\<symbol\>$!.
+So the above equation can be written
+\begin{LTXexample}
+$\MyVar{\vf\circ\vg}[spar,
+	der=\vn]{\vx}$
+\end{LTXexample}
+More generally, when you crate the class~\usercommand\<Class\>,
+you can use it as a command with the following syntax:
+\begin{lstlisting}
+@\usercommand\<Class\>@{@\<symbol\>@}[@\<options\>@]@\<usual syntax of class\>@
+\end{lstlisting}
+
+\section{The \texttt{command} key}
+
+\begingroup
+
+Above, we used the key~\lstinline!command! a couple of times:
+\begin{LTXexample}
+$\va[command=\overline]$,
+$\vH[command=\widetilde]$
+\end{LTXexample}
+This key applies the given command to the symbol.
+Sometimes, it is useful to put these commands into
+keys instead. So you can do stuff like
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{tilde}{command=\tilde},
+		{widetilde}{command=\widetilde},
+		{bar}{command=\bar},
+		{bold}{command=\mathbf},
+		{roman}{command=\mathrm},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{tilde}{command=\tilde},
+		{widetilde}{command=\widetilde},
+		{bar}{command=\bar},
+		{bold}{command=\mathbf},
+		{roman}{command=\mathrm},
+	},
+}
+Let us test:
+\begin{LTXexample}
+$\va[widetilde]$,
+$\va[bold]$,
+$\va[roman]$,
+$\va[bar]$
+\end{LTXexample}
+Note that there is a predefined key,~\lstinline!smash!,
+which is equivalent to~\lstinline!return, command=\smash!.
+
+\endgroup
+
+\section{The \texttt{return} keys}\label{ch:return}
+
+Let us suppose in this section that we have
+defined the key~\lstinline!conj! for complex conjugation,
+like in the introduction.
+Suppose you want to take the complex conjugate of the variable~\( \vz[1] \). Then you might write something like
+\begin{LTXexample}
+$\vz[1,conj]$
+\end{LTXexample}
+Notice that the bar has only been added over the~\( \vz \), as is standard mathematical typography; you normally do not write~\( \vz[1,return,conj] \).
+This reveals a design choice that has been made in \semantex:
+When you add an index or a command via the \lstinline!command! key,
+it is not immediately applied to the symbol.
+Rather, both commands and indices are added to a register and are then applied at the very last, right before the symbol is printed.
+This allows us to respect standard mathematical typography, as shown above.
+
+However, there are other times when this behaviour is not what you want.
+For instance, if you want to comjugate the inverse of a function, the following looks wrong:
+\begin{LTXexample}
+$\vf[inv,conj]$
+\end{LTXexample}
+Therefore, there is a key, called \lstinline!return!, that can be applied at any point to invoke the routine of adding all current commands, indices, and arguments to the symbol. Let us try it out:
+\begin{LTXexample}
+$\vf[inv,return,conj]$
+\end{LTXexample}
+Before we invoked~\lstinline!return!, the symbol was~\lstinline!f!, and the~\lstinline!-1! was stored as an upper index.
+But after the \lstinline!return! routine, the symbol is~\lstinline!f^{-1}!, and consequently, when we apply the~\lstinline!conj! key, you add a line above the whole thing.
+
+There are some cases when you do not want to add all commands, indices, and arguments to the symbol at the same time.
+Therefore, there exist a few extra, partial \lstinline!return! keys that only add some of them to the symbol and save the rest of later.
+We list the most important ones here and refer to~\cref{sec:fundamental_keys} for the remaining ones.
+Most users will probably only ever need the keys \lstinline!return! and~\lstinline!right return!.
+\begin{itemize}
+	\item
+	\mylst!return!
+	
+	Invokes the return routine, i.e.\ adds all commands, indices, and arguments to the symbol, if any such exist.
+
+	\item
+	\mylst!inner return!
+	
+	Invokes the inner return routine, i.e.\ adds all commands to the symbol, if any such exist.
+
+	\item
+	\mylst!right return!
+	
+	Invokes the right return routine, i.e.\ adds all commands, right indices, and right arguments to the symbol, if any such exist.
+
+	\item
+	\mylst!left return!
+	
+	Invokes the left return routine, i.e.\ adds all commands, left indices, and left arguments to the symbol, if any such exist.
+\end{itemize}
+
+
+\section{Keyval syntax conflicts}
+
+You can pass anything you want as key values, including other objects.
+But you quickly run into the following problem:
+Imagine you try setting~\lstinline!\vx[1,power=2]! as the lower
+index of a the object~\lstinline!\va!. If you try
+\begin{lstlisting}
+$ \va[lower=\vx[1,power=2]] $
+\end{lstlisting}
+then the system will break. Indeed, the system will see the object~\lstinline!\va!
+to which you have passed the two keys
+\begin{center}
+	\lstinline!lower=\vx[1!
+	\qquad\text{and}\qquad
+	\lstinline!power=2]!.
+\end{center}
+To avoid this behaviour, you will have to enclose the key
+value in braces:
+\begin{LTXexample}
+$ \va[lower={\vx[1,power=2]}] $
+\end{LTXexample}
+
+So far so good, but if you use our favourite shorthand notation
+for lower indices (simply writing the index in the options, like~\lstinline!\va[1]!),
+then it still goes wrong:
+\begin{lstlisting}
+$ \va[{\vx[1,power=2]}] $
+\end{lstlisting}
+The reason is that in \LaTeX\ (really, the \pack{xparse} package from \LaTeX3)
+interprets \lstinline![{...}]! more or less like~\lstinline![...]!
+in this case. 
+To make up for this, you can use either of the following strategies:
+\begin{LTXexample}
+$ \va[ {\vx[1,power=2]} ] $,
+$ \va[\vx[{1,power=2}]] $
+\end{LTXexample}
+There is a similar problem in the arguments,
+since arguments also allow a kind of keyval syntax
+(the keys that need equality signs are turned off by default, though;
+more on that in \cref{ch:arg_keyval}).
+But it will still react on commas and keys like~\lstinline!...!.
+Therefore, in order to ensure the correct output, you will also have to enclose any argument containing commas with braces:
+\begin{LTXexample}
+$ \vf{ \vg[{upper=3,lower=2}] } $,
+$ \vf{ {\vg[upper=3,lower=2]} } $
+\end{LTXexample}
+As mentioned in \cref{ch:arg_keyval}, you \emph{can}
+also turn keyval syntax in arguments completely off,
+avoiding such issues. This can be done by setting
+\begin{lstlisting}
+\SetupClass\MyVar{
+	arg keyval=false,
+}
+\end{lstlisting}
+
+\subsection{Cheating your way around keyval syntax conflicts}
+
+\begingroup
+If you grow tired of having to deal with such issues all the time, there
+are solutions to either partly or completely avoid this.
+The first solution we present does not solve
+the problem with~\lstinline!\va[\vx[1,power=2}]!, but
+it does solve problems like
+\begin{lstlisting}
+$ \va[lower=\vx[lower=3]] $
+\end{lstlisting}
+Normally, this will not work, as the underlying keyval machinery
+of \LaTeX3 does not allow key values to contain equality signs.
+However, there is another keyval package that does:
+the excellent package \pack{expkv}.
+To switch to the keyval parser of this package, we do
+
+\begin{lstlisting}
+\usepackage{expkv}
+\SemantexSetup{
+	keyval parser=\ekvparse,
+}
+\end{lstlisting}
+\SemantexSetup{
+	keyval parser=\ekvparse,
+}
+Now you can do
+\begin{LTXexample}
+$ \va[lower=\vx[lower=3]] $
+\end{LTXexample}
+
+In general,
+using the key
+\mylst!keyval parser={$\<command\>$}!
+sets the keyval parser function to be the command~\<command\>.
+The \<command\> must take three arguments:
+\mylst!$\<command\>\<function\num{1}\>\<function\num{2}\>${$\<key-value list\>$}!.
+The \<function\num{1}\> must take one argument, while \<function\num{2}\>~must take two.
+For a key-value list, \<function\num{1}\>~will be applied to single keys taking no values,
+while \<function\num{2}\>~will be applied to keys taking a value. By default, this key has been set to the command \lstinline!\keyval_parse:NNn! from~\LaTeX3.
+Changing this key will only affect keys for objects and classes,
+\emph{not} keys for use inside~\lstinline!\SemantexSetup!.
+
+\endgroup
+
+A more drastic solution is to use the package~\pack{stricttex},
+which has been developed mainly as a companion package to~\semantex.
+Unfortunately, it only works in~\hologo{LuaTeX}.
+If you don't know what \hologo{LuaTeX} is, that means that you are not
+using \hologo{LuaTeX}, and you should note that switching is a rather drastic affair
+since your existing font settings might very well not work
+with \hologo{LuaTeX}. Also, \semantex{} does not exactly make your document faster,
+and \hologo{LuaTeX} makes it even slower, so think carefully before you make the switch just for this.
+
+In any case, with \pack{stricttex}, you will be able to make brackets \enquote{strict}, which means that any \lstinline![! will be replaced
+by a~\lstinline![{!, and that any~\lstinline!]! will be replaced
+by a~\lstinline!}]!. This will make all of the above work just fine:
+\begin{lstlisting}
+\StrictBracketsOn
+$ \va[lower=\vx[lower=3]] $
+$ \va[\vx[1,power=2]] $
+$ \vf{ \vg[upper=3,lower=2] } $
+\StrictBracketsOff
+\end{lstlisting}
+There is no demonstration on the right since this manual
+has not been typeset using \hologo{LuaTeX}, so it would not work.
+
+\chapter{Example: Algebraic geometry}
+
+Let us discuss how to typeset sheaves and operations on morphisms in algebraic geometry.
+First of all, adding commands for sheaves is not a big deal:
+\begin{lstlisting}
+\NewObject\MyVar\sheafF{\mathcal{F}}
+\NewObject\MyVar\sheafG{\mathcal{G}}
+\NewObject\MyVar\sheafH{\mathcal{H}}
+\NewObject\MyVar\sheafreg{\mathcal{O}}
+	% sheaf of regular functions
+\NewObject\MyVar\sheafHom{\mathop{\mathcal{H}om}}
+\end{lstlisting}
+You can of course add as many sheaf commands as you need.
+
+Next, for morphisms of schemes~\( \vf \colon \vX \to \vY \),
+we need to be able to typeset comorphisms as well as the one hundred thousand different pullback and pushforward operations. For this, we add some keys to the \lstinline!\MyVar! key:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{comorphism}{upper=\#},
+			% comorphisms, i.e. f^{\#}
+		{inverse image}{upper={-1},no par},
+			% inverse image of sheaves
+		{sheaf pull}{upper=*,no par},
+			% sheaf *-pullback
+		{sheaf push}{lower=*,no par},
+			% sheaf *-pushforward
+		{sheaf !pull}{upper=!,no par},
+			% sheaf !-pullback
+		{sheaf !push}{lower=!,no par},
+			% sheaf !-pushforward
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{comorphism}{upper=\#},
+			% comorphisms, i.e. f^{\#}
+		{inverse image}{upper={-1},no par},
+			% inverse image of sheaves
+		{sheaf pull}{upper=*,no par},
+			% sheaf *-pullback
+		{sheaf push}{lower=*,no par},
+			% sheaf *-pushforward
+		{sheaf !pull}{upper=!,no par},
+			% sheaf !-pullback
+		{sheaf !push}{lower=!,no par},
+			% sheaf !-pushforward
+	},
+}
+We have added the command \lstinline!no par! to all pullback and pushforward commands since it is custom to write, say,~\( \vf[sheaf pull]{\sheafF} \) rather than~\( \vf[sheaf pull,par]{\sheafF} \). Of course, you can decide that for yourself, and in any case, you can write~\lstinline!\vf[sheaf pull,par]{\sheafF}! if you want to force it to use parentheses in a particular case. Of course, since all \semantex{} variables can be used as functions, so can whatever these pullback and pushforward operations output. So we may write:
+\begin{LTXexample}
+For a morphism~$ \vf \colon
+\vX \to \vY $ with
+comorphism~$ \vf[comorphism]
+\colon \sheafreg[\vY] \to
+\vf[sheaf push]{\sheafreg[\vX]} $,
+and for a sheaf~$ \sheafF $ on~$ \vY $, we can define the
+pullback~$ \vf[sheaf pull]{
+\sheafF} $ by letting~$
+\vf[sheaf pull]{\sheafF}{\vU} = \cdots $ and the $ ! $-pullback by letting~$
+\vf[sheaf !pull]{\sheafF}{\vU} = \cdots $.
+\end{LTXexample}
+Maybe some people would write \lstinline!pull!, \lstinline!push!, etc.~instead, but there are many different kinds of pullbacks in mathematics, so I prefer to use the \lstinline!sheaf!~prefix to show that this is for sheaves.
+Probably, in the long run, an algebraic geometer might also want
+to abbreviate~\lstinline!inverse image! to~\lstinline!invim!.
+
+There are a number of other operations we might want to do for sheaves. We already defined the key~\lstinline!res! for restriction, so there is no need to define this again.
+However, we might need to stalk, sheafify, take dual sheaves, and twist sheaves. Let us define keys for this:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{stalk}{sep lower={#1}},
+		% "sep lower" means "separator + lower", i.e. lower index
+		% separated from any previous lower index by a separator,
+		% which by default is a comma
+		{sheaf twist}{return,symbol put right={(#1)}},
+	},
+	define keys={
+		{sheafify}{upper=+},
+		{sheaf dual}{upper=\vee},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{stalk}{sep lower={#1}},
+		% "sep lower" means "separator + lower", i.e. lower index
+		% separated from any previous lower index by a separator,
+		% which by default is a comma
+		{sheaf twist}{return,symbol put right={(#1)}},
+	},
+	define keys={
+		{sheafify}{upper=+},
+		{sheaf dual}{upper=\vee},
+	},
+}
+\begin{LTXexample}
+$\sheafF[res=\vU,stalk=\vp]$,
+$\sheafF[res=\vU,spar,stalk=
+\vp]$, 
+$\sheafreg[\vX,stalk=\vp]$,
+$\sheafG[sheafify]$,
+$\vf[inverse image]{\sheafreg[
+\vY]}[spar,stalk=\vx]$,
+$\sheafG[sheaf dual]$,
+$\sheafreg[\vX][sheaf twist=-1]$,
+$\sheafreg[sheaf twist=1,sheaf dual]$
+\end{LTXexample}
+
+\chapter{Example: Homological algebra}
+
+Before you venture into homological algebra, you should probably
+define some keys for the standard constructions:
+
+\begin{lstlisting}
+\NewObject\MyVar\Hom{\operatorname{Hom}}
+\NewObject\MyVar\Ext{\operatorname{Ext}}
+\NewObject\MyVar\Tor{\operatorname{Tor}}
+\end{lstlisting}
+\NewObject\MyVar\Ext{\operatorname{Ext}}
+\NewObject\MyVar\Tor{\operatorname{Tor}}
+Now the ability to easily print indices via the options key will come in handy:
+\begin{LTXexample}
+$\Hom[\vA]{\vM,\vN}$,
+$\Ext[\vA]{\vM,\vN}$
+\end{LTXexample}
+\SetupClass\MyVar{
+define keys[1]={
+		{shift}{ right return,symbol put right={ \relax [ {#1} ] } },
+			% we use \lbrack and \rbrack rather than [ and ] since in some
+			% cases (using constructions like in @{\itshape\cref{ch:the_class_command}}@),
+			% the [...] might be interpreted as an optional argument.
+	},
+}
+You will probably need several keyval interfaces, some of which will be covered below. But right now, we shall implement a shift operation~\( \vX\mapsto\vX[shift=\vn] \):
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{shift}{ right return,symbol put right={ \lbrack #1 \rbrack } },
+			% we use \lbrack and \rbrack rather than [ and ] since in some
+			% cases (using constructions like in @{\itshape\cref{ch:the_class_command}}@),
+			% the [...] might be interpreted as an optional argument.
+	},
+}
+\end{lstlisting}
+Let us see that it works:
+\begin{LTXexample}
+$\vX \mapsto \vX[shift=\vn]$
+\end{LTXexample}
+Finally, let us define a command for the differential (in the homolgoical algebra sense):
+\begin{lstlisting}
+\NewObject\MyVar\dif{d}[no par]
+\end{lstlisting}%
+\NewObject\MyVar\dif{d}[no par]%
+\begin{LTXexample}
+$\dif{\vx} = 0$
+\end{LTXexample}
+
+\section{The \texttt{d}-index and the \texttt{i}-index}
+
+In branches of mathematics such as homological algebra,
+people have very different opinions about the positions of the gradings.
+As an algebraist, I am used to \emph{upper} gradings (\enquote{cohomological} grading), whereas many topologists prefer \emph{lower} gradings (\enquote{homological} grading). The \semantex{} system
+supports both, but the default is upper gradings.
+You can adjust this by writing
+\lstinline!grading position=upper! or~\lstinline!grading position=lower!.
+
+
+We already learned about the keys \lstinline!upper! and~\lstinline!lower!,
+as well as their friends \lstinline!sep upper!, \lstinline!sep lower!, \lstinline!comma upper!, \lstinline!comma lower!, etc.
+There also exist \enquote{relative} versions of these keys that print the index either as an upper index or as a lower index, depending on your preference for cohomological or homological grading. They are called
+\begin{center}
+	\lstinline!d!,
+	\lstinline!sep d!,
+	\lstinline!comma d!
+	\qquad\qquad and\qquad\qquad
+	\lstinline!i!,
+	\lstinline!sep i!,
+	\lstinline!comma i!,
+\end{center}
+and consequently, we shall refer to the indices
+they correspond to as the \enquote{\lstinline!d!-index} and the \enquote{\lstinline!i!-index}.
+The \lstinline!d! stands for \enquote{degree} and corresponds to
+the grading. The~\lstinline!i! stands for \enquote{index}
+and corresponds to the \enquote{other} index where you may store
+additional information.\footnote{These names are not perfect; you might object that the degree is also an index, but feel free to come up with a more satisfactory naming principle, and I shall be happy to consider it.}
+
+To understand the difference,
+keep the following two examples
+in mind: the hom complex~\( \Hom[*,i=\vA] \) and the simplicial homology~\( \ho[*,i=\vDelta] \):
+\begin{lstlisting}
+\NewObject\MyVar\Hom{\operatorname{Hom}}
+\NewObject\MyVar\ho{H}[grading position=lower] % homology
+\end{lstlisting}
+\begin{LTXexample}
+$\Hom[i=\vA,d=0]$,
+$\ho[i=\vDelta,d=1]$
+\end{LTXexample}
+Let us see them in action:
+\begingroup\begin{LTXexample}
+$ \vX[d=3,i=\vk] $
+
+\SetupObject\vX{
+	grading position=lower
+}
+
+$ \vX[d=3,i=\vk] $
+\end{LTXexample}\endgroup
+\noindent
+If you want to print a bullet as the degree, there is the predefined key~\lstinline!*! for this:
+\begingroup\begin{LTXexample}
+$ \vX[*] $
+
+\SetupObject\vX{
+	grading position=lower
+}
+
+$ \vX[*] $
+\end{LTXexample}\endgroup
+
+I guess it is also time to reveal that the previously mentioned shorthand notation~\lstinline!\vx[1]! for indices always prints the~\lstinline!1! in the \lstinline!i!-index. So changing the grading position changes the position of the index:
+\begingroup\begin{LTXexample}
+$ \vX[1] $
+
+\SetupObject\vX{
+	grading position=lower
+}
+
+$ \vX[1] $
+\end{LTXexample}\endgroup
+\noindent In other words, in the first example above, we could have written
+\begin{LTXexample}
+$\Hom[\vA,d=0]$,
+$\ho[\vDelta,d=1]$
+\end{LTXexample}
+
+
+Note that the use of the short notations \lstinline!d! and~\lstinline!i! does not prevent you from writing \lstinline!\vx[d]! and~\lstinline!\vx[i]!.
+This still works fine:
+\begin{LTXexample}
+$\vf[i]$, $\vf[i=]$,
+$\vf[d]$, $\vf[d=]$
+\end{LTXexample}
+As we see, it is only when a \lstinline!d! or~\lstinline!i! key is followed by an equality sign~\lstinline!=!
+that the actions of these keys are invoked.
+In fact, \semantex{} carefully separates keys taking
+a value from keys taking no values.
+
+We can similarly define a command for cohomology:
+\begin{lstlisting}
+\NewObject\MyVar\co{H}[grading position=upper]
+		% this is actually unnecessary, as
+		% upper grading is the default
+\end{lstlisting}
+Let us see \lstinline!\ho! and~\lstinline!\co! in practise:
+\begin{LTXexample}
+$\co[d=0]$, $\co[*]$,
+$\co[d=\vi]{\vX}$,
+$\co[\vG,d=0]$,
+$\co[\vH,*]$,
+$\co[\vDelta,d=\vi]{\vX}$
+\end{LTXexample}
+
+\begin{LTXexample}
+$\ho[d=0]$, $\co[*]$,
+$\ho[d=\vi]{\vX}$,
+$\ho[\vG,d=0]$,
+$\ho[\vH,*]$,
+$\ho[\vDelta,d=\vi]{\vX}$
+\end{LTXexample}
+Of course, you can define similar commands for cocycles, coboundaries, and all sorts of other entities that show up in homological algebra.
+
+You might also want to implement feature like reduced cohomology, \v{C}ech cohomology,
+and hypercohomology. This is quite easy with the \lstinline!command! key:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{reduced}{command=\widetilde},
+		{cech}{command=\check},
+		{hyper}{command=\mathbb},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys={
+		{reduced}{command=\widetilde},
+		{cech}{command=\check},
+		{hyper}{command=\mathbb},
+	},
+}
+
+\begin{LTXexample}
+$\co[reduced,d=\vi]$,
+$\co[cech][*]$,
+$\co[hyper,cech,d=0]{\vX}$
+\end{LTXexample}
+
+You can use a similar approach to define commands for derived functors:
+\begin{lstlisting}
+\NewObject\MyVar\Lder{\mathbb{L}}[no par]
+\NewObject\MyVar\Rder{\mathbb{R}}[no par]
+\end{lstlisting}
+\NewObject\MyVar\Lder{\mathbb{L}}[no par]
+\NewObject\MyVar\Rder{\mathbb{R}}[no par]
+For instance, we can write
+\begin{LTXexample}
+$\Lder[d=\vi]{\vf}$,
+$\Rder[d=0]{\vf}$
+\end{LTXexample}
+
+Alternatively, the user might prefer to use keyval syntax
+on the level of the function itself (\( \vf \)~in this case).
+This can be done the following way:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{Lder} {
+			left return, symbol put left=\mathbb{L}^{#1},
+		},
+		{Rder} {
+			left return, symbol put left=\mathbb{R}^{#1},
+		},
+	},
+	define keys={
+		{Lder} {
+			left return, symbol put left=\mathbb{L},
+		},
+		{Rder} {
+			left return, symbol put left=\mathbb{R},
+		},
+	},
+}
+\end{lstlisting}
+\SetupClass\MyVar{
+	define keys[1]={
+		{Lder} {
+			left return, symbol put left=\mathbb{L}^{#1},
+		},
+		{Rder} {
+			left return, symbol put left=\mathbb{R}^{#1},
+		},
+	},
+	define keys={
+		{Lder} {
+			left return, symbol put left=\mathbb{L},
+		},
+		{Rder} {
+			left return, symbol put left=\mathbb{R},
+		},
+	},
+}
+Then the syntax becomes:
+\begin{LTXexample}
+$\vF[Lder=\vi]$,
+$\vF[Lder]{\vX[*]}$,
+$\vF[Rder]{\vX[*]}$,
+$\Hom[Rder]{\vX,\vY}$
+\end{LTXexample}
+If you get tired of having to write \lstinline!\Hom[Rder]! all
+the time, you can create a shortcut:
+\begin{lstlisting}
+\NewObject\MyVar\RHom[copy=\Hom,Rder]
+\end{lstlisting}
+\NewObject\MyVar\RHom[copy=\Hom,Rder]
+The \lstinline!copy! key is like the \lstinline!parent! key,
+except it allows you to inherit the settings from an \emph{object} rather than a \emph{class}. Notice that we did not specify a symbol; the symbol argument is optional, and in this case, it was unnecessary, as the symbol was inherited from~\lstinline!\Hom!. Let us see it in action:
+\begin{LTXexample}
+$\RHom{\vX,\vY}$
+\end{LTXexample}
+
+\chapter{Keyval syntax in arguments (Example: Cohomology with coefficients)}\label{ch:arg_keyval}
+
+\SetupClass\MyVar{
+	define arg keys[1]={
+		{coef}{ other sep={;}{#1}  },
+	},
+}
+
+\SetupObject\co{
+	arg keyval=true,
+}
+
+Imagine we want to do cohomology with coefficients in some ring~\( \vR \).
+It is common to write this as~\( \co[*]{\vX,coef=\vR} \)
+with a semicolon instead of a comma. This can be implemented, too, with the syntax
+\begin{LTXexample}
+$\co[*]{\vX,coef=\vR}$
+\end{LTXexample}
+This shows that arguments of functions also support keyval syntax.
+To define argument keys,
+we use the key~\lstinline!define arg keys!,
+or~\mylst!define arg keys[$n$]! if you want it to be
+able to take $n$~values for~$n=0,1,2,\ldots,9$. The syntax for these is
+just like the syntax for the keys~\lstinline!define keys!
+and~\mbox{\mylst!define keys[$n$]!}.
+However, for reasons we shall see in a moment, argument
+keys (at least those taking values) are actually turned off
+by default, so we shall have to turn them on first:
+\begin{lstlisting}
+\SetupClass\MyVar{
+	define arg keys[1]={
+		{coef}{ other sep={;}{#1}  },
+	},
+}
+\SetupObject\co{
+	arg keyval=true,
+}
+\end{lstlisting}
+The key \lstinline!other sep! is a key that controls the separator
+between the current argument and the previous argument (it will only be printed if there was a previous argument). By default, this separator is a comma. So in the syntax~\lstinline!\co{*}{\vX,coef=\vR}!,
+there are two arguments, \lstinline!\vX! and~\lstinline!\vR!, and the separator is a semicolon.
+We shall later (see~\cref{ch:parse_coho_coef})
+see another, possibly more natural way to write cohomology with coefficients, and which avoids turning on keyval syntax in the argument.
+
+As mentioned, we had to turn keyval syntax on in order for it to work.
+By default, only keys taking no values are turned on in the argument.
+The reason is that argument keys taking values are only useful in very rare cases, such as cohomology with coefficients. If such keys were turned on in general, it would mess up
+every occurrence of an equality sign in arguments, and the following
+would not work:
+\begin{LTXexample}
+$\Hom[\sheafreg[\vU]]{
+	\sheafF[res=\vU],
+	\sheafG[res=\vU]
+}$
+\end{LTXexample}
+
+The key~\lstinline!arg keyval! can take four arguments: \lstinline!true! (which we used above, keyval syntax is completely on),
+\lstinline!false! (no keys allowed), \lstinline!single keys! (the default behaviour where only keys taking no values are allowed), and \lstinline!one single key! (only allows one key, taking no value).
+
+It should be noted that there are several predefined
+argument keys on the level
+of the class \lstinline!\SemantexBaseObject!.
+The full list can be found in \cref{sec:predefined_arg_keys}.
+
+\chapter{Left indices}
+
+Left indices are a recurring problem in all \TeX-based systems
+since \TeX\ only has metrics for the positioning of right indices, none for left indices. And it seems that even the later \TeX\ engines are making no attempts at correcting this. So most packages for left indices
+use variations of the following approach:
+\begin{LTXexample}
+$ {}^{*} f $
+\end{LTXexample}
+Notice the large space between the star and the~\( f \).
+To tackle this problem, the author has written
+the \pack{leftindex} package which at least attempts to improve
+this situation:
+\begin{LTXexample}
+$ \leftindex^{*} {f} $
+\end{LTXexample}
+Roughly, what it does is to use a \enquote{height phantom}
+and a \enquote{slanting phantom} to position the left superscript.
+The vertical positions of the left indices will be calculated using
+the height phantom, and the indentation of the left superscript will be calculated
+using the slanting phantom. More precisely, it will copy the metrics for the positioning of right indices from the slanting phantom and use that to position the left superscript. By default, both phantoms are set to be equal to the symbol, which goes fine sometimes, and at other times, another slanting phantom has to be specified. Below, the~\lstinline!I!~is the specified, custom slanting phantom:
+\begin{LTXexample}
+$ \leftindex^{*} {\Gamma} $,
+$ \leftindex[I]^* {\Gamma} $,
+$ \leftindex^* {A} $,
+$ \leftindex[P]^* {A} $
+\end{LTXexample}
+We refer to the manual of the package \pack{leftindex} for details,
+see
+\begin{center}
+	\url{https://ctan.org/pkg/leftindex}
+\end{center}
+
+Our solution for left indices in \semantex{} is based directly on the one
+from \pack{leftindex}. However, it works much better if you use \semantex
+than if you just used \pack{leftindex} alone, due to the ability to centrally control all your notation. This allows you to choose height and slanting phantoms once and for all in the preamble and never have to worry about it in your document body.
+
+Just like we have the keys \lstinline!upper!, \lstinline!lower!, \lstinline!sep upper!, \lstinline!sep lower!, \lstinline!comma upper!, \lstinline!comma lower!, we have a similar collection of keys for left
+indices:
+\lstinline!upper left!, \lstinline!lower left!, \lstinline!sep upper left!, \lstinline!sep lower left!, \lstinline!comma upper left!, \lstinline!comma lower left!:
+\begin{LTXexample}
+$ \vf[upper left=*] $,
+$ \vGamma[upper left=*] $,
+$ \vA[upper left=*] $
+\end{LTXexample}
+When you create a new object in \semantex, the height and slanting phantoms
+will automatically be set to be equal to the symbol. However, as we see
+above, we sometimes need to change them.
+This can be done using the keys \lstinline!height phantom!
+and~\lstinline!slanting phantom!:
+\begin{LTXexample}
+\SetupObject\vGamma{
+	slanting phantom=I}
+\SetupObject\vA{slanting phantom=P}
+$ \vf[upper left=*] $,
+$ \vGamma[upper left=*] $,
+$ \vA[upper left=*] $
+\end{LTXexample}
+
+Sometimes, changing the slanting phantom is not quite enough.
+In the previous example, the star is still not quite close enough
+to the~\( \vA \), and there is no slanting phantom that is quite slanted enough to correct this. We solve this using
+the key~\lstinline!post upper left!. What you add using this key
+will be printed after the upper left index, provided the upper left index
+is non-empty and hence will be printed in the first place.
+There is also a \lstinline!pre upper left!, and there are similarly \lstinline!pre lower left!, \lstinline!post lower left!, \lstinline!pre upper!, \lstinline!post upper!, \lstinline!pre lower!, and~\lstinline!post lower!.
+Let us see it in action:
+\begin{LTXexample}
+\SetupObject\vA{
+	slanting phantom=P,
+	post upper left=\!,
+}
+$ \vA[upper left=*] $
+\end{LTXexample}
+Note that \semantex{} at least does its best to try to guess
+new height and slanting phantoms when you use operations on objects:
+\begin{LTXexample}
+$ \vA[spar=\Bigg,upper left=*] $,
+$ \vP[command=\overline,return,
+	upper left=*] $
+\end{LTXexample}
+
+\chapter{The \texorpdfstring{\texttt{Symbol}}{Symbol} class type (Example: Derived tensor products and fibre products)}
+
+\NewSymbolClass\MyBinaryOperator[
+	define keys={
+		{Lder}{upper=L},
+		{Rder}{upper=R},
+	},
+]
+
+\NewObject\MyBinaryOperator\tensor{\otimes}[
+	define keys={
+		{der}{Lder},
+	},
+]
+
+\NewObject\MyBinaryOperator\fibre{\times}[
+	% Americans are free to call it \fiber instead
+	define keys={
+		{der}{Rder},
+	},
+]
+
+\semantex{} has facilities for printing tensor products~\( \tensor \) as well as derived tensor products~\( \tensor[der] \).
+This is probably the right time to reveal that \semantex{} supports multiple class \emph{types}.
+So far, we have been exclusively using the \lstinline!Variable!
+class type, which is what you create when you apply the command~\lstinline!\NewVariableClass!.
+The first other class type we shall need is the \lstinline!Symbol! class type.
+This has exactly the same syntax as the \lstinline!Variable!
+class type, except that it cannot take an argument.
+In other words, its syntax is
+\begin{lstlisting}
+@\usercommand\<object\>@[@\<options\>@]
+\end{lstlisting}
+You should normally only use it for special constructions like binary operators and not for e.g.\ variables -- the ability to add arguments to variables comes in handy much more often than one might think.
+Let us try to use it to define tensor products and fibre products:
+\begin{lstlisting}
+\NewSymbolClass\MyBinaryOperator[
+	define keys={
+		{Lder}{upper=L},
+		{Rder}{upper=R},
+	},
+]
+
+\NewObject\MyBinaryOperator\tensor{\otimes}[
+	define keys={
+		{der}{Lder},
+	},
+]
+
+\NewObject\MyBinaryOperator\fibre{\times}[
+	% Americans are free to call it \fiber instead
+	define keys={
+		{der}{Rder},
+	},
+]
+\end{lstlisting}
+As you see, this is one of the few cases where I recommend adding keyval
+syntax to other classes than your superclass~\lstinline!\MyVar!. Also, notice that it does not have any~\lstinline!parent=\MyVar!, as I do not really see any reason to inherit all the keyval syntax from the \lstinline!\MyVar!~class.
+Now we first define keys \lstinline!Lder! and~\lstinline!Rder! for left and right derived binary operators. Next, we build in a shortcut in both \lstinline!\tensor! and~\lstinline!\fibre!
+so that we can write simply~\lstinline!der! and get the correct notion of derived functor. Let us see it in action:
+\begin{LTXexample}
+$\vA \tensor \vB$,
+$\vX[*] \tensor[\vR] \vY[*]$
+$\vk \tensor[\vA,der] \vk$,
+$\vX \fibre[\vY,der] \vX$
+\end{LTXexample}
+
+\chapter{Paired delimiters}
+
+\NewObject\MyVar\norm[
+	left par=\lVert, right par=\rVert,
+	define keys[1]={
+		{default}{ output options={ default={#1} } },
+	},
+]
+\NewObject\MyVar\inner[left par=\langle, right par=\rangle]
+
+In this chapter, se show how to define delimiter commands like \( \norm{slot} \) and~\( \inner{slot,slot} \).
+This is easy to do via the keys \lstinline!left par! and~\lstinline!right par!:
+\begin{lstlisting}
+\NewObject\MyVar\norm[left par=\lVert, right par=\rVert]
+\NewObject\MyVar\inner[left par=\langle, right par=\rangle]
+\end{lstlisting}
+Indeed:
+\begin{LTXexample}
+$\norm{\va}$,
+$\inner{\va,\vb}$,
+$\inner{slot,slot}$
+\end{LTXexample}
+In the case where you want to use different kinds of
+norms, say \( \norm[2]{slot} \) or~\( \norm[\infty]{slot} \),
+you can use the key~\mylst!output options={$\<options\>$}!.
+This allows you to pass the~\<options\> to the output class
+(in this case,~\lstinline!\MyVar!):
+\begin{lstlisting}
+\SetupObject\norm{
+	define keys[1]={
+		{default}{ output options={ default={#1} } },
+	},
+}
+\end{lstlisting}
+\begin{LTXexample}
+$\norm{\vx}$,
+$\norm[2]{\vx}$,
+$\norm[\infty]{\vx}$
+\end{LTXexample}
+
+We can also create for more complicated constructions, like sets.
+The following is inspired from the \pack{mathtools} package where a similar construction is created using the commands from that package. My impression is that Lars Madsen is the main mastermind behind the code I use for the \lstinline!\where!~construction:
+\begin{lstlisting}
+\newcommand\wherecommand[1]{
+	\nonscript\:
+	#1\vert
+	\allowbreak
+	\nonscript\:
+	\mathopen{}
+}
+
+\NewObject\MyVar\where{ \wherecommand{\SemantexDelimiterSize} }
+
+\NewObject\MyVar\Set[
+	left par=\lbrace, right par=\rbrace,
+	pre arg={\,},post arg={\,},
+		% adds \, inside {...}, as recommended by D. Knuth
+	arg keyval=false,
+		% this turns off all keyval syntax in the argument
+]
+\end{lstlisting}
+\newcommand\wherecommand[1]{
+	\nonscript\:
+	#1\vert
+	\allowbreak
+	\nonscript\:
+	\mathopen{}
+}
+
+\NewObject\MyVar\where{ \wherecommand{\SemantexDelimiterSize} }
+
+\NewObject\MyVar\Set[
+	left par=\lbrace, right par=\rbrace,
+	pre arg={\,},post arg={\,},
+		% adds \, inside {...}, as recommended by D. Knuth
+	arg keyval=false,
+		% this turns off all keyval syntax in the argument
+]
+
+\noindent
+As we briefly mentioned previously,
+\lstinline!\SemantexDelimiterSize!~is a command
+that returns the size of the delimiters in the
+argument.
+Now you can use
+\begin{LTXexample}
+$\Set{ \vx\in\vY \where \vx\ge0 }$,
+$\Set[par=\big]{ \vx\in\vY \where \vx\ge0 }$
+\end{LTXexample}
+Don't forget that, because we called~\lstinline!output=\MyVar! in the beginning of this manual,
+the output of any of these commands also belongs to class~\lstinline!\MyVar!.
+So you can do stuff like
+\begin{LTXexample}
+$\Set{
+	\vx \in \vY[\vi]
+	\where
+	\vx \ge 0
+}[command=\overline,\vi\in\vI]$
+\end{LTXexample}
+
+
+Tuple-like commands are also possible:
+\begin{lstlisting}
+\NewObject\MyVar\tup[left par=(,right par=)] % tuples
+\NewObject\MyVar\pcoor[ % projective coordinates
+	left par={[}, right par={]},
+	set arg sep=\mathbin{:},
+		% changes the argument separator to colon
+	set arg dots=\dotsb,
+		% changes what is inserted if you write "..."
+]
+\end{lstlisting}
+\NewObject\MyVar\tup[left par=(,right par=)] % tuples
+\NewObject\MyVar\pcoor[ % projective coordinates
+	left par={[}, right par={]},
+	set arg sep=\mathbin{:},
+		% changes the argument separator to colon
+	set arg dots=\dotsb,
+		% changes what is inserted if you write "..."
+]
+Let us see them in action:
+\begin{LTXexample}
+$\tup{\va,\vb,...,\vz}$,
+$\pcoor{\va,\vb,...,\vz}$
+\end{LTXexample}
+
+One can use similar techniques for other, less obvious purposes, like calculus differentials:
+\begin{lstlisting}
+\NewVariableClass\CalculusDifferential[
+	parent=\MyVar,
+	define arg keys[1]={
+		{default}{sep={d\!#1}},
+		% default is the key that is automatically applied by the
+		% system to anything you write in the argument that is
+		% not recognized as an argument key. The sep key
+		% is a key that prints the value of the key with the
+		% standard argument separator in front.
+	},
+	set arg dots=\dotsm,
+	never par,
+	% never par is like no par, except no par will still print
+	% parentheses when there is more than one argument
+	% -- never par does not even print parentheses in this case
+]
+	
+\NewObject\CalculusDifferential\intD[
+	set arg sep={\,},
+	next arg with sep=true,
+		% because of this, even the first argument will
+		% receive a separator, which in this case
+		% is a small space
+]
+
+\NewObject\CalculusDifferential\wedgeD[set arg sep=\wedge]
+\end{lstlisting}
+\NewVariableClass\CalculusDifferential[
+	parent=\MyVar,
+	define arg keys[1]={
+		{default}{sep={d\!#1}},
+		% default is the key that is automatically applied by the
+		% system to anything you write in the argument that is
+		% not recognized as an argument key. The sep key
+		% is a key that prints the value of the key with the
+		% standard argument separator in front.
+	},
+	set arg dots=\dotsm,
+	never par,
+	% never par is like no par, except no par will still print
+	% parentheses when there is more than one argument
+	% -- never par does not even print parentheses in this case
+]
+	
+\NewObject\CalculusDifferential\intD[
+	set arg sep={\,},
+	next arg with sep=true,
+		% because of this, even the first argument will
+		% receive a separator, which in this case
+		% is a small space
+]
+
+\NewObject\CalculusDifferential\wedgeD[set arg sep=\wedge]
+
+\begin{LTXexample}
+$\int \vf \intD{\vx[1],
+	\vx[2],...,\vx[n]}$,
+
+$\int \vf \wedgeD{\vx[1],
+	\vx[2],...,\vx[n]}$
+\end{LTXexample}
+
+\chapter{Using \texorpdfstring{Seman\!\TeX{}}{SemanTeX} in other commands using \texorpdfstring{\texttt{\textbackslash UseClassInCommand}}{\string\UseClassInCommand}}\label{sec:UseClassInCommand}
+
+\SemantexRecordObject{\Frac}
+\newcommand\Frac[2]{
+	\SemantexRecordSource{\Frac{#1}{#2}}
+	\UseClassInCommand\MyVar{ \frac{#1}{#2} }
+}
+
+Sometimes, it is useful to create other commands based on \semantex
+classes. For instance, if you grow tired of
+writing~\lstinline!\MyVar{ \frac{...}{...} }! whenever you
+want to apply keys to a fraction, it could make sense to create
+a command~\lstinline!\Frac! which automatically wraps
+the fraction in~\lstinline!\MyVar!. The first guess how to
+do that would be something like
+\begin{lstlisting}
+\newcommand\Frac[2]{ \MyVar{ \frac{#1}{#2} } }
+\end{lstlisting}
+\begin{LTXexample}
+\[
+	\Frac{1}{2}[spar=\Big,power=2]
+\]
+\end{LTXexample}
+Indeed, this will work fine for most people.
+In fact, the only case where this might cause issues
+is if you want to use the \pack{stripsemantex} algorithm to strip
+your document of \semantex{} markup. But in order to prepare yourself for this possibility, I recommend getting used from the start to doing it
+in a slightly more cumbersome way:
+\begin{lstlisting}
+\SemantexRecordObject{\Frac}
+\newcommand\Frac[2]{
+	\SemantexRecordSource{\Frac{#1}{#2}}
+	\UseClassInCommand\MyVar{ \frac{#1}{#2} }
+}
+\end{lstlisting}
+\begin{LTXexample}
+\[
+	\Frac{1}{2}[spar=\Big,power=2]
+\]
+\end{LTXexample}
+
+First things first: We used the following command in front
+of~\lstinline!\MyVar!:
+\begin{lstlisting}
+\UseClassInCommand@\usercommand\<Class\>@[@\<options\>@]{@\<symbol\>@}@\<usual syntax of the class\>@
+\end{lstlisting}
+So the first advantage to writing~\lstinline!\UseClassInCommand\MyVar!
+instead of just~\lstinline!\MyVar!
+is that you can pass an additional set of options
+to the class first. However, there is a more important
+difference, namely that this solution makes the command
+compatible with the \pack{stripsemantex} algorithm.
+
+The reason the first solution was not compatible
+with \pack{stripsemantex} is that, in this case, the algorithm
+will desperately look through your document for
+the code~\lstinline!\MyVar{ \frac{1}{2} }[spar=\Big,power=2]!
+in order to strip it from your document.
+But it will find it nowhere, as this code is hidden away
+in the \lstinline!\Frac!~command.
+Therefore, we do three things:
+\begin{itemize}
+	\item We register the command~\lstinline!\Frac!
+	as a \semantex{} command using the
+	line
+	\begin{lstlisting}
+\SemantexRecordObject{\Frac}
+	\end{lstlisting}
+	After this, \semantex{} \enquote{knows}
+	that \lstinline!\Frac!~is part of the
+	family of \semantex{} markup.
+	\item We use the command~\lstinline!\SemantexRecordSource!
+	to \enquote{record} the source of the command internally.
+	This way, \pack{stripsemantex} will know what to look for
+	when it moves through the document, trying to strip
+	it of \semantex{} markup.
+	It is therefore important that you record
+	the source exactly like it will be written in
+	the source.
+	(You need not worry about missing braces, though;
+	even if you write~\lstinline!\Frac12! in your document,
+	\pack{stripsemantex} will still recognize the code
+	and strip it as expected.)
+	\item We write~\lstinline!\UseClassInCommand\MyVar!
+	instead of just~\lstinline!\MyVar!
+	in order to correctly record the output code internally. Roughly speaking, when you use the command~\lstinline!\UseClassInCommand!,
+	\semantex{} \enquote{knows} that the class~\lstinline!\MyVar!
+	is now used as part of some greater construction.
+\end{itemize}
+
+\section{Example: Category theory}
+
+\newcommand\categoryformat[1]{{\operatorname{\mathsf{#1}}}}
+	% This means that we write categories with sans-serif fonts;
+	% -- but you can change this to your own liking.
+	% We use \operatorname since it will allow us to use ordinary
+	% dashes (rather than minuses) in math mode.
+	% We use an extra pair of braces around \operatorname
+	% in order to make it an ordinary symbol (instead of an operator).
+	% This solution is inspired by an answer by egreg (obviously),
+	% see https://tex.stackexchange.com/a/567886/19809
+
+
+\NewObject\MyVar\catset{\categoryformat{Set}}
+\NewObject\MyVar\cattop{\categoryformat{Top}}
+\NewObject\MyVar\catvect{\categoryformat{Vect}}
+
+\SemantexRecordObject{\catxmod}
+\newcommand\catxmod[1]{
+	\SemantexRecordSource{\catxmod{#1}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}
+}
+
+\SemantexRecordObject{\catmodx}
+\newcommand\catmodx[1]{
+	\SemantexRecordSource{\catmodx{#1}}
+	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}
+}
+
+\SemantexRecordObject{\catxmody}
+\newcommand\catxmody[2]{
+	\SemantexRecordSource{\catxmody{#1}{#2}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}
+}
+
+\SemantexRecordObject{\catxmodx}
+\newcommand\catxmodx[1]{
+	\SemantexRecordSource{\catxmodx{#1}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}
+}
+
+The above method can be used to create commands
+for typing categories. First and foremost,
+it is easy to create objects corresponding
+to simple categories like~\( \catset \), \( \cattop \) and~\( \catvect \):
+\begin{lstlisting}
+\newcommand\categoryformat[1]{{\operatorname{\mathsf{#1}}}}
+	% This means that we write categories with sans-serif fonts;
+	% -- but you can change this to your own liking.
+	% We use \operatorname since it will allow us to use ordinary
+	% dashes (rather than minuses) in math mode.
+	% We use an extra pair of braces around \operatorname
+	% in order to make it an ordinary symbol (instead of an operator).
+	% This solution is inspired by an answer by egreg (obviously),
+	% see @\itshape\url{https://tex.stackexchange.com/a/567886/19809}@
+
+\NewObject\MyVar\catset{\categoryformat{Set}}
+\NewObject\MyVar\cattop{\categoryformat{Top}}
+\NewObject\MyVar\catvect{\categoryformat{Vect}}
+\end{lstlisting}
+\begin{LTXexample}
+$ \catset $,
+$ \cattop $,
+$ \catvect{\vk} $.
+\end{LTXexample}
+However, we run into issues with categories like~\( \catxmod{\vR} \)
+where we shall constantly have to change the ring~\( \vR \).
+For this, we use the constructions we learned at the introduction
+to this chapter:
+\begin{lstlisting}
+\SemantexRecordObject{\catxmod}
+\newcommand\catxmod[1]{
+	\SemantexRecordSource{\catxmod{#1}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}
+}
+\end{lstlisting}
+\begin{LTXexample}
+$ \catxmod{\vR} $,
+$ \catxmod{\vS} $,
+$ \catxmod{\vA}[spar,op] $
+\end{LTXexample}
+(here, we used the key~\lstinline!op!
+which we defined in \cref{sec:algebra}).
+You can, of course, extend it to all sorts
+of other situations, like
+\( \catmodx{\vR} \) or~\( \catxmody{\vR}{\vS} \):
+\begin{lstlisting}
+\SemantexRecordObject{\catmodx}
+\newcommand\catmodx[1]{
+	\SemantexRecordSource{\catmodx{#1}}
+	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}
+}
+
+\SemantexRecordObject{\catxmody}
+\newcommand\catxmody[2]{
+	\SemantexRecordSource{\catxmody{#1}{#2}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}
+}
+
+\SemantexRecordObject{\catxmodx}
+\newcommand\catxmodx[1]{
+	\SemantexRecordSource{\catxmodx{#1}}
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}
+}
+\end{lstlisting}
+
+\chapter{The \texorpdfstring{\texttt{parse}}{parse} routine}
+
+\NewObject\MyVar\Mat{\operatorname{Mat}}[
+	% We provide data sets "rows" and "columns" to
+	% be set up by the user later
+	data provide={rows},
+	data provide={columns},
+	data provide={field},
+	define keys[1]={
+		{rows}{ data set={rows}{#1} }, % set the rows data set
+		{columns}{ data set={columns}{#1} }, % set the columns data set
+		{field}{ data set={field}{#1} }, % set the underlying field
+		{arg}{ field={#1} },
+			% this way, setting the argument becomes equivalent
+			% to specifying the underlying field
+	},
+	parse options={ % Here we add code to the parse routine
+		% We check whether columns = rows. If so, we only write
+		% the number once
+		str if eq TF={\SemantexDataGetExpNot{columns}}{\SemantexDataGetExpNot{rows}}
+		{
+			set keys x={
+				lower={\SemantexDataGetExpNot{columns}},
+			},
+		}
+		{
+			set keys x={
+				lower={
+					\SemantexDataGetExpNot{rows}
+					\times
+					\SemantexDataGetExpNot{columns}
+				},
+			},
+		},
+		if blank F={\SemantexDataGetExpNot{field}}
+		{
+			set arg keys x={
+				sep={\SemantexDataGetExpNot{field}},
+			},
+		},
+	},
+]
+
+
+\NewObject\MyVar\GL{\operatorname{GL}}[
+	% We provide a few data sets:
+	data provide=order, % The "order" will be the number n in GL_n(k)
+	data provide=field, % The "field" is of course the k in GL_n(k)
+	define keys[1]={
+		{order}{ data set={order}{#1} }, % Sets the order
+		{field}{ data set={field}{#1} }, % Sets the field
+		{arg}{ field={#1} },
+			% This way, setting the argument becomes equivalent
+			% to setting the field
+	},
+	parse options={
+		set keys x={
+			% This means set the keys, but fully expand their values first
+			lower={\SemantexDataGetExpNot{order}},
+		},
+		if blank F={\SemantexDataGetExpNot{field}}
+		{
+			set arg keys x={
+				% Set the argument keys, but fully expand their values first
+				sep={\SemantexDataGetExpNot{field}},
+			},
+		},
+	},
+]
+
+\SetupObject\co{
+	data provide=coefficient,
+	data provide=space,
+	define keys[1]={
+		{coef}{ data set={coefficient}{#1} },
+		{space}{ data set={space}{#1} },
+		{arg}{ space={#1} },
+	},
+	parse options={
+		if blank F={\SemantexDataGetExpNot{space}}
+		{
+			set arg keys x={
+				sep=\SemantexDataGetExpNot{space},
+			},
+		},
+		if blank F={\SemantexDataGetExpNot{coefficient}}
+		{
+			set arg keys x={
+				other sep={;}{ \SemantexDataGetExpNot{coefficient} },
+			},
+		},
+	},
+}
+
+As you can see above, \semantex{} has a \enquote{waterfall-like} behaviour. It runs keys in the order it receives them. This works fine most of the time, but for some more complicated constructions, it is useful to be able to provide a collection of data in any order,
+and have the system take care of printing them in the right places,
+according to how you program the object in the preamble.
+For this purpose, we have the \lstinline!parse!~routine.
+Using the \lstinline!parse! routine allows for a comfortable,
+HTML-like syntax, e.g.:
+\begin{LTXexample}
+$ \GL[order=\vn,field=\vk] $,
+$ \Mat[rows=\vm,columns=\vn,
+		field=\vk] $,
+$ \co[d=0,coef=\vR,space=\vX] $
+\end{LTXexample}
+The \lstinline!parse! routine is a collection of code which is
+executed right before
+an object (or class) is being rendered (but before it outputs).
+By default, the parse routine contains no code.
+However, you can add code to it using the
+key~\mylst!parse options={$\<keys\>$}!.
+
+Even though the \lstinline!parse!~routine is automatically invoked right before rendering, you can also invoke it at any time by force
+using the key~\lstinline!parse!. This will also empty the code from the
+\lstinline!parse!~routine so that it will not be executed twice:
+\begin{LTXexample}
+$ \GL[order=\vn,field=\vk,parse,
+		spar,op] $
+\end{LTXexample}
+(here we used the key~\lstinline!op! from \cref{sec:algebra}).
+Alternatively, you can add a new pair of brackets, which will render the object
+and invoke the \lstinline!parse!~routine:
+\begin{LTXexample}
+$\GL[order=\vn,field=\vk][spar,op]$
+\end{LTXexample}
+Note, though, that in this case, the \lstinline!spar! and~\lstinline!op!~keys
+are not being applied to the object~\lstinline!\GL! itself, but
+to the object (of class~\lstinline!\MyVar!) that it outputs. This should not cause
+any issues in practice, as long as the keys you are using
+are already defined on the level of~\lstinline!\MyVar!.
+
+\section{Example: Matrix sets and groups}
+
+Suppose we want to be able to write the group of invertible \( \vn \times \vn \)-matrices with entries in~\( \vk \)
+as~\(
+	\GL[order=\vn,field=\vk]
+\).
+We can in principle do the following:
+\begingroup
+\SetupObject\GL{
+	data clear=parse options,
+	define keys[1]={
+		{arg}{ set arg keys={sep=#1} }
+	},
+}
+\begin{lstlisting}
+\NewObject\MyVar\GL{\operatorname{GL}}
+\end{lstlisting}
+\begin{LTXexample}
+$ \GL[\vn]{\vk} $.
+\end{LTXexample}%
+However, this is not quite as systematic and semantic as we might have wanted. Indeed, what if later we would like to change the notation
+to~\(
+	\GL{\vn,\vk}
+\)?
+We could in principle use a key with 2~values for this.
+However, in this section,
+we show how to use the \lstinline!parse!~routine
+to enable the syntax from the introduction to this chapter.
+
+\endgroup
+
+As mentioned there, we need to add code via the \lstinline!parse!~routine.
+However, to make proper use of it, we need some programming keys
+and programming commands.
+You can find an overview of these in~\cref{sec:programming_keys,sec:programming_commands}.
+
+To set up the notation from above, we do the following:
+\begin{lstlisting}
+\NewObject\MyVar\GL{\operatorname{GL}}[
+	% We provide a few data sets:
+	data provide=order, % The "order" will be the number n in GL_n(k)
+	data provide=field, % The "field" is of course the k in GL_n(k)
+	define keys[1]={
+		{order}{ data set={order}{#1} }, % Sets the order
+		{field}{ data set={field}{#1} }, % Sets the field
+		{arg}{ field={#1} },
+			% This way, setting the argument becomes equivalent
+			% to setting the field
+	},
+	parse options={
+		set keys x={
+			% This means set the keys, but fully expand their values first
+			lower={\SemantexDataGetExpNot{order}},
+		},
+		if blank F={\SemantexDataGetExpNot{field}}
+		{
+			set arg keys x={
+				% Set the argument keys, but fully expand their values first
+				sep={\SemantexDataGetExpNot{field}},
+			},
+		},
+	},
+]
+\end{lstlisting}
+
+Notice that we changed the \lstinline!arg!~key.
+This means that specifying the argument becomes equivalent to setting the field.
+This is what makes the first two pieces of syntax below equivalent:
+
+\begin{LTXexample}
+$ \GL[order=\vn,field=\vk] $,
+$ \GL[order=\vn]{\vk} $,
+$ \GL[order=\vn] $.
+\end{LTXexample}
+
+Let us look at a more complicated example:
+The set~\( \Mat[rows=\vn,columns=\vm,field=\vk] \)
+of \( \vn \times \vm \)-matrices with entries in~\( \vk \).
+What makes this example more complicated is not only that we have
+an additional piece of data, but that we require
+that if the number of rows and columns are equal,
+we want it to print~\( \Mat[rows=\vn,columns=\vn,field=\vk] \)
+rather than~\( \Mat[rows=\vn,columns={}\vn,field=\vk] \).
+We accomplish this by the following:
+
+\begin{lstlisting}
+\NewObject\MyVar\Mat{\operatorname{Mat}}[
+	% We provide data sets "rows" and "columns" to
+	% be set up by the user later
+	data provide={rows},
+	data provide={columns},
+	data provide={field},
+	define keys[1]={
+		{rows}{ data set={rows}{#1} }, % set the rows data set
+		{columns}{ data set={columns}{#1} }, % set the columns data set
+		{field}{ data set={field}{#1} }, % set the underlying field
+		{arg}{ field={#1} },
+			% this way, setting the argument becomes equivalent
+			% to specifying the underlying field
+	},
+	parse options={ % Here we add code to the parse routine
+		% We check whether columns = rows. If so, we only write
+		% the number once
+		str if eq TF={\SemantexDataGetExpNot{columns}}{\SemantexDataGetExpNot{rows}}
+		{
+			set keys x={
+				lower={\SemantexDataGetExpNot{columns}},
+			},
+		}
+		{
+			set keys x={
+				lower={
+					\SemantexDataGetExpNot{rows}
+					\times
+					\SemantexDataGetExpNot{columns}
+				},
+			},
+		},
+		if blank F={\SemantexDataGetExpNot{field}}
+		{
+			set arg keys x={
+				sep={\SemantexDataGetExpNot{field}},
+			},
+		},
+	},
+]
+\end{lstlisting}
+
+\begin{LTXexample}
+$ \Mat[rows=\vm,columns=\vn,
+	field=\vk] $,
+$ \Mat[rows=\vn,columns=\vn,
+	field=\vk] $.
+\end{LTXexample}
+
+\section{Example: Cohomology with coefficients, revisited}\label{ch:parse_coho_coef}
+
+As promised previously, we revisit cohomology with coefficients
+and show how to set up a syntax like the below:
+
+\begin{lstlisting}
+\SetupObject\co{
+	data provide=coefficient,
+	data provide=space,
+	define keys[1]={
+		{coef}{ data set={coefficient}{#1} },
+		{space}{ data set={space}{#1} },
+		{arg}{ space={#1} },
+	},
+	parse options={
+		if blank F={\SemantexDataGetExpNot{space}}
+		{
+			set arg keys x={
+				sep=\SemantexDataGetExpNot{space},
+			},
+		},
+		if blank F={\SemantexDataGetExpNot{coefficient}}
+		{
+			set arg keys x={
+				other sep={;}{ \SemantexDataGetExpNot{coefficient} },
+			},
+		},
+	},
+}
+\end{lstlisting}
+
+\begin{LTXexample}
+$\co[d=0]$,
+$\co[d=0,space=\vX]$,
+$\co[d=0,space=\vX,coef=\vR]$
+\end{LTXexample}
+
+\section{Example: Partial derivatives}
+
+Let us look at a more complicated example: Let us create a command for partial derivatives:
+
+\NewObject\MyVar\partialdif[
+	no par,
+	bool provide={raise function},
+	bool set true={raise function},
+	set i dots=\dotsm,
+	set i sep={\,},
+	define keys[1]={
+		{default}{
+			sep i={\partial #1},
+		},
+		{raise}{
+			str if eq TF={#1}{true}
+			{
+				bool set true={raise function},
+			}
+			{
+				str if eq TF={#1}{false}
+				{
+					bool set false={raise function},
+				}
+				{
+					ERROR key value not found={raise}{#1},
+				},
+			},
+		},
+	},
+	parse options={
+		if blank TF={ \SemantexDataGetExpNot{upper} }
+		{
+			int if greater TF={ \SemantexIntGet{number of lower indices} } { 1 }
+			{
+				set keys x={
+					symbol={
+						\SemantexExpNot\frac
+						{
+							\partial ^ { \SemantexIntGet{number of lower indices} }
+							\SemantexBoolIfT{raise function}
+							{
+								\SemantexDataGetExpNot{arg}
+							}
+						}
+						{
+							\SemantexDataGetExpNot{lower}
+						}
+					},
+				},
+			}
+			{
+				set keys x={
+					symbol={
+						\SemantexExpNot\frac
+						{
+							\partial
+							\SemantexBoolIfT{raise function}
+							{
+								\SemantexDataGetExpNot{arg}
+							}
+						}
+						{
+							\SemantexDataGetExpNot{lower}
+						}
+					},
+				}
+			},
+		}
+		{
+			set keys x={
+				symbol={
+					\SemantexExpNot\frac
+					{
+						\partial ^ { \SemantexDataGetExpNot{upper} }
+						\SemantexBoolIfT{raise function}
+						{
+							\SemantexDataGetExpNot{arg}
+						}
+					}
+					{
+						\SemantexDataGetExpNot{lower}
+					}
+				},
+			},
+		},
+		data clear={lower},
+		data clear={upper},
+		bool if T={raise function}
+		{
+			data clear={arg},
+			int clear={number of arguments},
+		},
+	},
+]
+
+\begin{lstlisting}
+\NewObject\MyVar\partialdif[
+	no par,
+	bool provide={raise function},
+	bool set true={raise function},
+	set i dots=\dotsm,
+	set i sep={\,},
+	define keys[1]={
+		{default}{
+			sep i={\partial #1},
+		},
+		{raise}{
+			str if eq TF={#1}{true}
+			{
+				bool set true={raise function},
+			}
+			{
+				str if eq TF={#1}{false}
+				{
+					bool set false={raise function},
+				}
+				{
+					ERROR key value not found={raise}{#1},
+				},
+			},
+		},
+	},
+	parse options={
+		if blank TF={ \SemantexDataGetExpNot{upper} }
+		{
+			int if greater TF={ \SemantexIntGet{number of lower indices} } { 1 }
+			{
+				set keys x={
+					symbol={
+						\SemantexExpNot\frac
+						{
+							\partial ^ { \SemantexIntGet{number of lower indices} }
+							\SemantexBoolIfT{raise function}
+							{
+								\SemantexDataGetExpNot{arg}
+							}
+						}
+						{
+							\SemantexDataGetExpNot{lower}
+						}
+					},
+				},
+			}
+			{
+				set keys x={
+					symbol={
+						\SemantexExpNot\frac
+						{
+							\partial
+							\SemantexBoolIfT{raise function}
+							{
+								\SemantexDataGetExpNot{arg}
+							}
+						}
+						{
+							\SemantexDataGetExpNot{lower}
+						}
+					},
+				}
+			},
+		}
+		{
+			set keys x={
+				symbol={
+					\SemantexExpNot\frac
+					{
+						\partial ^ { \SemantexDataGetExpNot{upper} }
+						\SemantexBoolIfT{raise function}
+						{
+							\SemantexDataGetExpNot{arg}
+						}
+					}
+					{
+						\SemantexDataGetExpNot{lower}
+					}
+				},
+			},
+		},
+		data clear={lower},
+		data clear={upper},
+		bool if T={raise function}
+		{
+			data clear={arg},
+			int clear={number of arguments},
+		},
+	},
+]
+\end{lstlisting}
+Let us see it in action:
+\begin{LTXexample}
+\[
+	\partialdif[\vx,\vy,\vz]{
+		\vf } ,
+	\partialdif[\vu^2,\vv^2,
+		d=4]{ \vf },
+	\partialdif[\vx[1],
+		\vx[2],...,\vx[\vn],
+		d=\vn]{ \vf }
+\]
+\[
+	\partialdif[\vx,\vy,\vz,raise=false]{ \vf } ,
+	\partialdif[\vu^2,\vv^2,
+		d=4,raise=false]{
+			\vf },
+\]
+\[
+	\partialdif[\vx[1],
+		\vx[2],...,\vx[\vn],
+		d=\vn,raise=false]{
+			\vf	}
+\]
+\end{LTXexample}
+As you see, we use the \lstinline!d!~key to tell the command what superscript it should put on the~\( \partial \) in the enumerator. If it does not receive a~\lstinline!d!, it counts the number of variables you wrote and prints that. That is why the following would give the wrong result:
+\begin{LTXexample}
+\[
+	\partialdif[\vu^2,\vv^2]{
+		\vf },
+	\partialdif[\vx[1],
+		\vx[2],...,\vx[\vn]]{
+		\vf }
+\]
+\end{LTXexample}
+
+\chapter{\texorpdfstring{\texttt{stripsemantex}}{stripsemantex} -- stripping your document of \texorpdfstring{\semantex}{SemanTeX} markup}
+
+\semantex{} is a big, heavy package, and it might raise eyebrows if you try using it in submissions to journals. On top of that, \url{arXiv.org}
+is using \TeX~Live~2016 at the time of writing this, and it has
+an old version of \LaTeX3 that seems unable to run \semantex.
+To address this issue, \semantex{} has a companion package,
+called \pack{stripsemantex}, which allows you to strip the
+\semantex{} markup from your document and replace it with raw \LaTeX~code.
+While no such algorithm will ever be perfect, it generally works
+very well, even for quite complicated constructions,
+as long as you use the package in the \enquote{normal}
+and supported way.
+(If you want proof, have a look at my
+recent paper which was stripped using
+the algorithm: \url{https://arxiv.org/abs/2008.04794}.)
+
+The system has the following limitations:
+
+\begin{itemize}
+	\item It is currently only able to strip the \semantex{} markup from your main document (so it will ignore anything in \lstinline!\input{...}! and~\lstinline!\include{...}!). So prior to running \pack{stripsemantex},
+	you should include your entire document body in your
+	main \texttt{.tex}~file.
+	\item Partly because of the previous point, no attempt is made to remove
+	the \emph{setup} of \semantex,
+	so commands like \lstinline!\NewObject!, \lstinline!\SetupObject!, and~\lstinline!\SetupClass!
+	will remain in the document body.
+	You will then have to remove these yourself afterwards.
+	But the \semantex{} markup itself should be stripped completely from your document.
+	\item As mentioned, as long as you do normal, supported things,
+	everything should work fine. Non-normal, non-supported
+	things are tings like
+	\begin{lstlisting}
+\va[execute={\vb}]
+	\end{lstlisting}
+	\item Things might go wrong if you define new keys
+	between \lstinline!\begin{document}! and~\lstinline!\end{document}!
+	whose definitions make use of other \semantex{} objects or classes,
+	since the algorithm will try to strip these from the definitions.
+	For instance, don't do stuff like this
+	after~\lstinline!\begin{document}!:
+	\begin{lstlisting}
+\SetupObject\va{
+	define keys[1]={
+		{weirdkey}{ upper=\vb[ {#1} ] }
+	},
+}
+	\end{lstlisting}
+	If you do, the algorithm will then try and strip this
+	occurrence of~\lstinline!\vb! from the key definition.
+	To avoid such issues, only ever define keys in your preamble,
+	as the algorithm will ignore everything
+	before \lstinline!\begin{document}!.
+	\item When the document has just been stripped,
+	it will load a small package called \pack{semtex},
+	which contains a couple of commands that the output will need
+	in order to run. You will be able to replace all of these commands
+	by other commands and then render the package \pack{semtex}
+	unnecessary. More on this in \cref{sec:semtex_package}.
+	\item When \semantex{} runs, the content of any argument is being wrapped
+	between \lstinline!\begingroup! and~\lstinline!\endgroup!. This is part of what
+	makes it possible to use the command~\lstinline!\SemantexDelimiterSize!.
+	However, these \lstinline!\begingroup! and~\lstinline!\endgroup! will not appear
+	in the stripped document. This means that if you do stuff like
+	\begin{lstlisting}
+$ \def\foo{bar} \va{ \def\foo{barbar} \vx } \foo $
+	\end{lstlisting}
+	then this will print~\( \va{\vx} bar \) before running \pack{stripsemantex},
+	but~\( \va{\vx} barbar \) after. In order to avoid this, simply don't define
+	commands inside arguments, which you should never do in the first place (and why would you anyway?).
+\end{itemize}
+
+As a small proof of concept, this is what the example in the introduction
+would look like when stripped of \semantex{} markup:
+
+\begin{lstlisting}
+% Same preamble as before.
+
+\begin{document}
+
+$ \overline{f}^{(n)} $
+
+$ g^{-1}|_{U} (x) $
+
+$ (h^{-1} \mathcal{F})_{p}
+	= \mathcal{F}_{h(p)} $
+
+\end{document}
+\end{lstlisting}
+
+Yes, I know, this was a very simple, unconvincing example.
+If you want a less trivial example, as mentioned before,
+you can have a look at my latest paper, which was stripped with
+(a previous alpha version of) \pack{stripsemantex}:
+
+\begin{center}
+	\url{https://arxiv.org/abs/2008.04794}
+\end{center}
+
+\section{The \texttt{semtex} package}\label{sec:semtex_package}
+
+When you have stripped your document and removed all \semantex{} package setup, it should be safe to remove
+the loading of \semantex{} from your preamble.
+However, the stripping algorithm will automatically
+add the following lines to your document right before~\lstinline!\begin{document}!:
+\begin{lstlisting}
+% The following was added by "stripsemantex":
+
+\usepackage{semtex,leftindex,graphicx}
+
+\providecommand\SemantexLeft{%
+	\mathopen{}\mathclose\bgroup\left
+}
+
+\providecommand\SemantexRight{%
+	\aftergroup\egroup\right
+}
+
+\makeatletter
+\DeclareRobustCommand\SemantexBullet{%
+  \mathord{\mathpalette\SemantexBullet@\at@{0.5}}%
+}
+\newcommand\SemantexBullet@\at@[2]{%
+  \vcenter{\hbox{\scalebox{#2}{$\m@\at@th#1\bullet$}}}%
+}
+\DeclareRobustCommand\SemantexDoubleBullet{\SemantexBullet \SemantexBullet}
+\makeatother
+\end{lstlisting}
+The package \pack{leftindex} is loaded to take care of any
+possible left indices. The package~\pack{graphicx}
+is loaded to provide the command~\lstinline!\scalebox!.
+This package~\pack{semtex} is a small package whose sole purpose
+is to be loaded by stripped \semantex{} documents.
+All it does is define the four commands
+\lstinline!\SemantexLeft!, \lstinline!\SemantexRight!,
+\lstinline!\SemantexBullet!, and~\lstinline!\SemantexDoubleBullet!
+so that you can remove these definitions from your document and just rely on the package instead.
+
+Let us take a look at the commands defined by \pack{semtex}:
+
+\begin{itemize}
+	\item
+	\mylst!\SemantexBullet!,
+	\mylst!\SemantexDoubleBullet!
+	
+	The commands that contain the bullets we use in \semantex,
+	i.e.~the superscript in~\( \co{*} \).
+	These bullets are smaller (and prettier, in my opinion)
+	than the standard \lstinline!\bullet! command from~\LaTeX.
+	
+	\item
+	\mylst!\SemantexLeft!,
+	\mylst!\SemantexRight!
+	
+	Like \lstinline!\left ...\right!, but fixing some spacing issues
+	around these.
+	They are completely equivalent to~\lstinline!\mleft! and~\lstinline!\mright!
+	from the package~\pack{mleftright}, so it is safe to just load that package
+	and replace the above commands by \lstinline!\mleft ...\mright! instead,
+	or use the redefinitions mentioned above.
+\end{itemize}
+
+\section{The \texttt{stripsemantex} algorithm}
+
+The stripping algorithm works like this.
+It will work in any \TeX\ engine (\hologo{pdfTeX}, \hologo{XeTeX}, \hologo{LuaTeX}, etc.), but along
+the way, you will have to create a small,
+separate document and compile it with \hologo{LuaTeX}.
+Suppose in the following that you \TeX\ document is called~\texttt{mydoc.tex}.
+
+\begin{enumerate}[(1)]
+	\item Make sure to collect all of the \semantex{} markup you want
+	stripped in the main document,~\texttt{mydoc.tex}.
+	Also make sure to follow the recommendations
+	in \cref{sec:UseClassInCommand}, in case you have created commands
+	of the form described there.
+	\item Put the following somewhere in your preamble, after
+	the loading of \semantex:
+	\begin{lstlisting}
+\SemantexSetup{semtexfile=true}
+	\end{lstlisting}
+	\item Compile your document \texttt{mydoc.tex} using your preferred \TeX\ engine (\hologo{pdfTeX}, \hologo{XeTeX}, \hologo{LuaTeX}, or whatever).
+	Because of the previous step, there
+	will now be a new file, \texttt{mydoc.semtex},
+	in your folder, where the raw output
+	of each \semantex{} command is stored. In a moment,
+	\pack{stripsemantex} will use this information to replace
+	each command by the raw code it outputs.
+	\item Create another \TeX\ document in the same folder
+	as \texttt{mydoc.tex}, and call it \texttt{stripdoc.tex}
+	(or whatever you want). Put the following into it:
+	\begin{lstlisting}
+\documentclass{article}
+
+\usepackage{stripsemantex}
+
+\begin{document}
+
+\StripSemantex{mydoc}
+
+\end{document}
+	\end{lstlisting}
+	Then compile it \textbf{with \hologo{LuaTeX}}.
+	
+	After this step, another document will have been created in the same
+	folder, called~\lstinline!mydoc_prestripped.tex!. It will look just like \texttt{mydoc.tex},
+	but in the document body, each \semantex{} markup command will now
+	have a command \mylst!\SemantexIDcommand{$\<a unique ID\>$}!
+	preceding it.
+	
+	\item\label{pt:pre_strip_point}
+	Compile the document \lstinline!mydoc_prestripped.tex! using the same \TeX\ engine as the one you used
+	for \texttt{mydoc.tex}.
+	\item\label{pt:strip_point} 
+	Compile the document~\lstinline!stripdoc.tex! again, this time also \textbf{using \hologo{LuaTeX}}.
+	
+	\item After the previous step, some (but usually not all) \semantex{} markup will have been
+	removed from the file~\lstinline!mydoc_prestripped.tex!.
+	If the stripping algorithm has terminated (which it almost never does after a single run), there will now be a new document in your folder,
+	called~\lstinline!mydoc_stripped.tex!.
+	If this document is not there, repeat the steps \ref{pt:pre_strip_point} and~\ref{pt:strip_point}.
+	
+	Continue this way until the file \lstinline!mydoc_stripped.tex! appears. It can easily require three or more iterations, but each iteration will usually be faster than the previous one, and eventually, the file~\lstinline!mydoc_stripped.tex! will appear.
+	(Note that at the point~\ref{pt:strip_point}, \pack{stripsemantex} will also issue a warning if the algorithm has not yet terminated, asking you to repeat the steps \ref{pt:pre_strip_point} and~\ref{pt:strip_point}).
+	
+	Note again that your \semantex{} \textbf{setup}
+	will not be removed, so there
+	will still be commands like \lstinline!\NewObject!,
+	\lstinline!\SetupObject!, \lstinline!\SetupClass!,~etc.
+	left. You will then have to remove these few commands from your document manually.
+\end{enumerate}
+
+Apart from the machinery for stripping \semantex{} markup from documents,
+the package \pack{stripsemantex} also provides the command~\lstinline!\StripSemantexStripComments!,
+which is in principle completely unrelated to \semantex{} itself.
+This command allows you to strip all comments between \lstinline!\begin{document}! and~\lstinline!\end{document}!.
+If your document is again called~\lstinline!mydoc.tex!,
+you can create the following document and compile it \textbf{with \hologo{LuaTeX}}:
+\begin{lstlisting}
+\documentclass{article}
+
+\usepackage{stripsemantex}
+
+\begin{document}
+
+\StripSemantexStripComments{mydoc}
+
+\end{document}
+\end{lstlisting}
+This will create a new document, called \lstinline!mydoc_comments_stripped.tex!, where all comments
+in the document body have been removed.
+
+\chapter{Known bugs}
+
+If you write e.g.~\lstinline!Other spar={[}{]}{\Bigg}!
+in a heading, your command will fail for some reason.
+It can be solved by omitting the braces around~\lstinline!\Bigg!,
+i.e.~by replacing it by~\lstinline!Other spar={[}{]}\Bigg!.
+
+\chapter{The predefined keys, commands, and data}
+
+In this chapter, we give a complete list of the predefined keys.
+Firstly,
+the keys that can be used inside the command~\lstinline!\SemantexSetup! are:
+
+\begin{itemize}
+	\item \mylst!keyval parser={$\<command\>$}!
+	
+	Sets the keyval parser function to~\<command\>.
+	The \<command\> must take three arguments:
+	\mylst!$\<command\>\<function\num{1}\>\<function\num{2}\>${$\<key-value list\>$}!.
+	The \<function\num{1}\> must take one argument, while \<function\num{2}\>~must take two.
+	For a key-value list, \<function\num{1}\>~will be applied to single keys taking no values,
+	while \<function\num{2}\>~will be applied to keys taking a value. By default, this key has been set to the \LaTeX3 command~\mylst!\keyval_parse:NNn!.
+	Another interesting possibility is the command~\lstinline!\ekvparse! from the package~\lstinline!expkv!. This choice will only affect keys for objects and classes,
+	\emph{not} keys for use inside~\lstinline!\SemantexSetup!.
+	
+	\item \mylst!single key parser={$\<command\>$}!
+
+	Sets the single key parser function to~\<command\>.
+	The single key parser is the command that parses the content of the argument
+	when you have applied the setting \mylst!arg keyval=single keys!.
+	The \<command\> must take two arguments:
+	\mylst!$\<command\>\<function\>${$\<comma list\>$}!.
+	The \<function\> must take one argument and will be applied
+	to each entry in the \<comma list\>.
+	By default, this key has been set to the \LaTeX3 command~\mylst!\clist_map_function:nN! (but with the arguments in reverse order).
+	
+	\item \mylst!semtex file={$\values\<true|\default{false}\>$}!
+	
+	When turned on, a \lstinline!.semtex! file will be created while processing the document.
+	This is mainly relevant when using \lstinline!stripsemantex!.
+\end{itemize}
+
+Apart from this, \semantex{} has a large collection of keys that are predefined for the class \lstinline!\SemantexBaseObject!.
+In the following sections, we include the full list.
+
+\section{Keys for defining and removing keys}
+
+\begin{itemize}
+	\item
+	\mylst!define keys={$\<key definitions\>$}!
+	
+	Defines keys taking no values.
+	The syntax is
+	\begin{lstlisting}
+		define keys={
+			{key1}{ upper=3, lower=7 },
+			{key2}{ lower=6, upper=4 },
+		},
+	\end{lstlisting}
+
+	\item
+	\mylst!define keys[$n$]={$\<key definitions\>$}!
+	
+	Defines keys taking $n$~values, where $n=0,1,2,\dotsc,8$.
+	The values are accessed by
+	writing
+	\lstinline!#1!,~\lstinline!#2!, \ldots,~\lstinline!#8!.
+	For technical reasons, nine arguments are not allowed.
+	The syntax is
+	\begin{lstlisting}
+		define keys[2]={
+			{key1}{ upper=3+#1, lower=7-#2 },
+			{key2}{ lower=6\cdot#1, upper=4/#2 },
+		},
+	\end{lstlisting}
+	
+	\item
+	\mylst!append keys={$\<key definitions\>$}!
+	
+	Appends keys taking no values, i.e.~adds code to the right of that key.
+	The syntax is identical to the one for~\lstinline!define keys!.
+	
+	\item
+	\mylst!prepend keys={$\<key definitions\>$}!
+	
+	Prepends keys taking no values, i.e.~adds code to the left of that key.
+	The syntax is identical to the one for~\lstinline!define keys!.
+
+	\item
+	\mylst!append keys[$n$]={$\<key definitions\>$}!
+	
+	Appends keys taking $n$~values, where~$n=0,1,\dotsc,8$, i.e.~adds code to the right of that key.
+	The syntax is identical to the one for~\mylst!define keys[$n$]!.
+	
+	\item
+	\mylst!prepend keys[$n$]={$\<key definitions\>$}!
+	
+	Prepends keys taking $n$~values, where~$n=0,1,\dotsc,8$, i.e.~adds code to the left of that key.
+	The syntax is identical to the one for~\mylst!define keys[$n$]!.
+	
+	\item
+	\mylst!remove key=$\<key name\>$!
+	
+	Removes the key~\<key name\> taking no values.
+	
+	\item
+	\mylst!remove key[$n$]=$\<key name\>$!
+	
+	Removes the key~\<key name\> taking $n$~values, where $n=0,1,2,\dotsc,8$.
+
+	\item
+	\mylst!define arg keys={$\<key definitions\>$}!
+	
+	Defines argument keys taking no values.
+	The syntax is similar to the one for~\lstinline!define keys!.
+	
+	\item
+	\mylst!define arg keys[$n$]={$\<key definitions\>$}!
+	
+	Defines argument keys taking $n$~values, where $n=0,1,2,\dotsc,8$.
+	The syntax is similar to the one for~\mylst!define keys[$n$]!.
+	
+	\item
+	\mylst!append arg keys={$\<key definitions\>$}!
+	
+	Appending argument keys taking no values, i.e.~adds code to the right of that key.
+	The syntax is identical to the one for~\lstinline!define arg keys!.
+	
+	\item
+	\mylst!prepend arg keys={$\<key definitions\>$}!
+	
+	Prepending argument keys taking no values, i.e.~adds code to the left of that key.
+	The syntax is identical to the one for~\lstinline!define arg keys!.
+
+	\item
+	\mylst!append arg keys[$n$]={$\<key definitions\>$}!
+	
+	Appending argument keys taking $n$~values, where~$n=0,1,\dotsc,8$, i.e.~adds code to the right of that key.
+	The syntax is identical to the one for~\mylst!define arg keys[$n$]!.
+	
+	\item
+	\mylst!prepend arg keys[$n$]={$\<key definitions\>$}!
+	
+	Prepending argument keys taking $n$~values, where~$n=0,1,\dotsc,8$, i.e.~adds code to the left of that key.
+	The syntax is identical to the one for~\mylst!define arg keys[$n$]!.
+	
+	\item
+	\mylst!remove arg key=$\<key name\>$!
+	
+	Removes the argument key~\<key name\> taking no values.
+	
+	\item
+	\mylst!remove arg key[$n$]=$\<key name\>$!
+	
+	Removes the argument key~\<key name\> taking $n$~values, where $n=0,1,2,\dotsc,8$.
+\end{itemize}
+
+\section{Programming keys}\label{sec:programming_keys}
+
+\begin{itemize}
+	\item
+	\mylst!execute={$\<\TeX\ code\>$}!
+	
+	Executes the \<\TeX\ code\> on the spot.
+
+	\item
+	\mylst!set keys={$\<keys\>$}!,
+	\mylst!keys set={$\<keys\>$}!
+	
+	Sets the keys \<keys\>.
+	
+	\item
+	\mylst!set keys x={$\<keys\>$}!,
+	\mylst!keys set x={$\<keys\>$}!
+	
+	Sets the keys \<keys\>, but fully expands their values.
+
+	\item
+	\mylst!data provide={$\<data\>$}!
+	
+	Provides a new piece of data consisting of a token list.
+	
+	\item
+	\mylst!data set={$\<data\>$}{$\<value\>$}!
+	
+	Sets the \<data\> to \<value\>.
+
+	\item
+	\mylst!data set x={$\<data\>$}{$\<value\>$}!
+	
+	Sets the \<data\> to \<value\>, but fully expands the \<value\> first.
+
+	\item
+	\mylst!data put left={$\<data\>$}{$\<value\>$}!
+	
+	Adds the \<value\> to the left of \<data\>.
+
+	\item
+	\mylst!data put left x={$\<data\>$}{$\<value\>$}!
+	
+	Adds the \<value\> to the left of \<data\>, but fully expands the \<value\> first.
+	
+	\item
+	\mylst!data put right={$\<data\>$}{$\<value\>$}!
+	
+	Adds the \<value\> to the right of \<data\>.
+
+	\item
+	\mylst!data put right x={$\<data\>$}{$\<value\>$}!
+	
+	Adds the \<value\> to the right of \<data\>, but fully expands the \<value\> first.
+	
+	\item
+	\mylst!data clear={$\<data\>$}!
+	
+	Clears the piece of data~\<data\>.
+	
+	\item
+	\mylst!bool provide={$\<boolean\>$}!
+	
+	Provides a new piece of data consisting of a boolean.
+	
+	\item
+	\mylst!bool set true={$\<boolean\>$}!
+	
+	Sets the \<boolean\> to true.
+	
+	\item
+	\mylst!bool set false={$\<boolean\>$}!
+	
+	Sets the \<boolean\> to false.
+	
+	\item
+	\mylst!bool if TF={$\<boolean\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!bool if T={$\<boolean\>$}{$\<if true\>$}!, \\
+	\mylst!bool if TF={$\<boolean\>$}{$\<if false\>$}!
+	
+	Runs \<if~true\> or \<if~false\>, depending on the value of \<boolean\>.
+	
+	\item 
+	\mylst!int provide={$\<integer\>$}!
+	
+	Provides a new piece of data consisting of an integer.
+	
+	\item
+	\mylst!int set={$\<integer\>$}{$\<value\>$}!
+	
+	Sets the \<integer\> to \<value\>.
+	
+	\item
+	\mylst!int incr={$\<integer\>$}!
+	
+	Increases the \<integer\> by~\( 1 \).
+	
+	\item
+	\mylst!int if eq TF={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!int if eq T={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!int if eq F={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+	
+	Checks whether the integers \<integer\num{1}\> and \<integer\num{2}\> are equal,
+	and runs \<if~true\> or \<if~false\> accordingly.
+
+	\item
+	\mylst!int if greater TF={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!int if greater T={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!int if greater F={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+	
+	Checks whether the integer \<integer\num{1}\> is greater than~\<integer\num{2}\>,
+	and runs \<if~true\> or \<if~false\> accordingly.
+	
+	\item
+	\mylst!int if less TF={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!int if less T={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!int if less F={$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+	
+	Checks whether the integer \<integer\num{1}\> is less than~\<integer\num{2}\>,
+	and runs \<if~true\> or \<if~false\> accordingly.
+	
+	\item
+	\mylst!int clear={$\<integer\>$}!
+	
+	Clears the \<integer\>, i.e.~sets it to~\( 0 \).
+	
+	\item
+	\mylst!if blank TF={$\<tokens\>$}{$\<if true\>$}{$\<if false\>$}!,\\
+	\mylst!if blank T={$\<tokens\>$}{$\<if true\>$}!,\\
+	\mylst!if blank F={$\<tokens\>$}{$\<if false\>$}!
+	
+	Fully expands the \<tokens\> and checks if it is blank,
+	and runs \<if true\> or \<if false\> according to this.
+	
+	\item
+	\mylst!str if eq TF={$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!str if eq T={$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!str if eq F={$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if false\>$}!
+	
+	Checks whether the strings \<string\num{1}\> and \<string\num{2}\> are equal,
+	and runs \<if~true\> or \<if~false\> accordingly.
+	
+	\item
+	\mylst!ERROR={$\<error message\>$}!
+	
+	Issues an generic error message. At the end of the message, it automatically adds \enquote{object~\usercommand\<object name\> on line~\<line number\>}
+	or \enquote{class~\usercommand\<Class name\> on line~\<line number\>}.
+	
+	\item
+	\mylst!ERROR key value not found={$\<key\>$}{$\<value\>$}!
+
+	Issues an error, saying that the key~\<key\> was set to the unknown value~\<value\>.
+
+	\item
+	\mylst!ERROR arg key value not found={$\<key\>$}{$\<value\>$}!
+
+	Issues an error, saying that the argument key~\<key\> was set to the unknown value~\<value\>.
+\end{itemize}
+
+\section{Fundamental keys for class/object information}\label{sec:fundamental_keys}
+
+\begin{itemize}
+	\item
+	\mylst!parent={$\<Class\>$}!
+
+	Sets the class to have parent~\<Class\>.
+	
+	\item
+	\mylst!class={$\<Class\>$}!
+
+	Sets the object to have class~\<Class\>.
+	
+	\item
+	\mylst!copy={$\<object\>$}!
+	
+	Sets the object to be a copy
+	of~\<object\>.
+	Then \<object\> works as a \enquote{parent object}, and all information
+	will be inherited from~\<object\> unless modified for the current object.
+	
+	\item
+	\mylst!symbol={$\<value\>$}!
+	
+	Sets the symbol to~\<value\>. At the same time,
+	the height phantom and the slanting phantom are set to the same value.
+
+	\item
+	\mylst!symbol put left={$\<value\>$}!
+	
+	Adds \<value\> to the left of the symbol. No change is made to the height
+	phantom or the slanting phantom.
+
+	\item
+	\mylst!symbol put right={$\<value\>$}!
+	
+	Adds \<value\> to the right of the symbol. No change is made to the height
+	phantom or the slanting phantom.
+	
+	\item
+	\mylst!height phantom={$\<value\>$}!
+	
+	Sets the height phantom to~\<value\>.
+	
+	\item
+	\mylst!slanting phantom={$\<value\>$}!
+	
+	Sets the slanting phantom to~\<value\>.
+	
+	\item
+	\mylst!grading position={$\values\<\default{upper}|lower\>$}!, \\
+	\mylst!grading pos={$\values\<\default{upper}|lower\>$}!
+	
+	Sets whether to use upper (\enquote{cohomological})
+	or lower (\enquote{homological}) grading.
+	The default is~\lstinline!upper!.
+	
+	\item
+	\mylst!command={$\<command\>$}!
+	
+	Applies the \<command\> to the symbol.
+	
+	\item
+	\mylst!clear command!
+	
+	Clears the list of commands to be applied to the symbol.
+	
+	\item
+	\mylst!return!
+	
+	Invokes the return routine, i.e.\ adds all commands, indices, and arguments to the symbol, if any such exist.
+
+	\item
+	\mylst!inner return!
+	
+	Invokes the inner return routine, i.e.\ adds all commands to the symbol, if any such exist.
+
+	\item
+	\mylst!right return!
+	
+	Invokes the right return routine, i.e.\ adds all commands, right indices, and right arguments to the symbol, if any such exist.
+
+	\item
+	\mylst!left return!
+	
+	Invokes the left return routine, i.e.\ adds all commands, left indices, and left arguments to the symbol, if any such exist.
+	
+	\item
+	\mylst!left index return!
+	
+	Adds the left indices to the symbol, if any such exists.
+	
+	\item
+	\mylst!right index return!
+	
+	Adds the right indices to the symbol, if any such exists.
+	
+	\item
+	\mylst!index return!
+	
+	Adds all indices, left and right to the symbol, if any such exists.
+	
+	\item
+	\mylst!left arg return!
+	
+	Adds the left argument, if any such exists, to the symbol.
+	
+	\item
+	\mylst!right arg return!
+	
+	Adds the right argument, if any such exists, to the symbol.
+	
+	\item
+	\mylst!arg return!
+	
+	Adds the argument, if any such exists, to the symbol.
+	
+	\item
+	\mylst!output={$\<Class\>$}!
+	
+	Sets the output class to~\<Class\>.
+	
+	\item
+	\mylst!do output={$\values\<true|\default{false}\>$}!
+
+	Sets whether the current object/class should output or not.
+	The default is false, but the system will automatically
+	change this when needed. \emph{Never} set this to
+	\lstinline!true! by default, as this will
+	cause an infinite loop.
+	
+	\item
+	\mylst!output options={$\<keys\>$}!
+	
+	Adds the \<keys\> to the output options,
+	i.e.\ those options passed to the output class.
+	
+	\item
+	\mylst!parse options={$\<keys\>$}!
+	
+	Adds the \<keys\> to the parse options, i.e.~adds it to the key \mylst!parse code!.
+	
+	\item
+	\mylst!parse!
+	
+	Invokes the parse routine, i.e.~runs the key \mylst!parse code! and then empties
+	the contents of that key.
+	
+	\item
+	\mylst!parse code!
+	
+	The key where the parse options are stored. It is emptied when the parse
+	routine is invoked.
+	
+	\item
+	\mylst!math class={$\<command\>$}!
+	
+	Sets the \TeX\ math class to be~\<command\>.
+	The intended values are \lstinline!\mathord!, \lstinline!\mathop!, \lstinline!\mathbin!, \lstinline!\mathrel!, \lstinline!\mathopen!, \lstinline!\mathclose!, and~\lstinline!\mathpunct!.
+	
+	\item
+	\mylst!default={$\<value\>$}!
+	
+	This is the key that is applied whenever the
+	user writes something in the options which is not a key,
+	e.g.~the~\lstinline!1! in~\lstinline!\vf[1]!.
+	By default, this keys has been set to be equal to~\lstinline!sep i!,
+	but it is meant to be changeable by the user.
+
+	\item
+	\mylst!degree default={$\<value\>$}!
+	
+	This is the key where the grading goes.
+	It is the one used by the (now deprecated) \lstinline!Cohomology! class type.
+	By default, this key has been set to be equal to~\lstinline!sep d!,
+	but it is meant to be changeable by the user.
+	
+	\item
+	\mylst!*!
+	
+	Adds a bullet to the \lstinline!d!-index.
+	
+	\item
+	\mylst!**!
+	
+	Adds a double bullet to the \lstinline!d!-index.
+	
+	\item
+	\mylst!slot!
+	
+	Adds a slot to the \lstinline!i!-index.
+	
+	\item
+	\mylst!dots!, \mylst!...!
+	
+	Adds three dots to the \lstinline!i!-index.
+	
+	\item
+	\mylst!* with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the \lstinline!d!-index,
+	separated by the \<separator\>
+	from any previous \lstinline!d!-indices.
+
+	\item
+	\mylst!** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the \lstinline!d!-index,
+	separated by the \<separator\>
+	from any previous \lstinline!d!-indices.
+	
+	\item
+	\mylst!arg={$\<value\>$}!
+	
+	The key that is applied whenever the user adds
+	an argument via the standard syntax, e.g.~\lstinline!\vf{\vx}!.
+	By default, it is set to be equal to \lstinline!set arg single keys!,
+	but it is meant to be changable by the user.
+	
+	\item
+	\mylst!smash!
+
+	Applies the command~\lstinline!\smash! to the symbol.
+	Equivalent to~\lstinline!return, command=\smash!.
+	
+	\item
+	\mylst!prime!, \mylst!'!, \mylst!''!, \mylst!'''!
+	
+	Adds one or more primes to the symbol in the upper index.
+	The first one is equivalent to \lstinline!upper={\prime},next upper with sep=false!,
+	and the rest are equivalent to multiple iterations
+	of~\lstinline!prime!.
+\end{itemize}
+
+\section{Keys for the argument parentheses}
+
+\begin{itemize}
+	\item
+	\mylst!par!
+	
+	Turns parentheses on. Equivalent to \lstinline!use par=true!.
+	
+	\item
+	\mylst!no par!
+	
+	Turns parentheses off, but still prints them if more
+	than one argument is received.
+	Equivalent to \lstinline!use par=false!.
+	
+	\item
+	\mylst!never par!
+	
+	Turns parentheses completely off, even if more than one argument
+	is received. (This is ugly and should only be used for special constructions.)
+	Equivalent to \lstinline!use par=never!.
+	
+	\item
+	\mylst!use par={$\values\<\default{true}|false|never\>$}!
+	
+	Sets whether or not to use parentheses.
+	If~\lstinline!true!, turns parentheses on (this is the default behaviour).
+	If~\lstinline!false!, turns parentheses off, but still prints them if more
+	than one argument is received.
+	If~\lstinline!never!, turns parentheses completely off, even if more than one argument
+	is received. (This is ugly and should only be used for special constructions.)
+	The default value is~\lstinline!true!.
+	
+	\item
+	\mylst!par size={$\values\<\default{normal}|auto|*|{\textit{other}}\>$}!
+	
+	Sets the parentheses size.
+	Here,~\lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+	
+	\item
+	\mylst!left par={$\<parenthesis\>$}!
+	
+	Sets the left parenthesis.
+	The default value is~\lstinline!(!.
+
+	\item
+	\mylst!right par={$\<parenthesis\>$}!
+	
+	Sets the right parenthesis.
+	The default value is~\lstinline!)!.
+\end{itemize}
+
+\section{Keys for the \texttt{spar} routine}
+
+\begin{itemize}
+	\item
+	\mylst!spar!
+	
+	Invokes the \lstinline!spar! routine.
+	
+	\item
+	\mylst!spar={$\values\<normal|auto|*|\textit{other}\>$}!
+	
+	Invokes the \lstinline!spar! routine, with
+	the specified parenthesis size.
+	Here,~\lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+	
+	\item
+	\mylst!spar size={$\values\<\default{normal}|auto|*|{\textit{other}}\>$}!
+	
+	Sets the \lstinline!spar! parenthesis size.
+	Here,~\lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+	
+	\item
+	\mylst!left spar={$\<parenthesis\>$}!
+	
+	Sets the left parenthesis for the \lstinline!spar! routine.
+	The default value is~\lstinline!(!.
+	
+	\item
+	\mylst!right spar={$\<parenthesis\>$}!
+	
+	Sets the right parenthesis for the \lstinline!spar! routine.
+	The default value is~\lstinline!)!.
+	
+	\item
+	\mylst!other spar={$\<left parenthesis\>$}{$\<right parenthesis\>$}!
+	
+	Invokes the \lstinline!spar! routine, but with the assigned parentheses.
+	
+	\item
+	\mylst!Other spar={$\<left parenthesis\>$}{$\<right parenthesis\>$}{$\values\<normal|auto|*|{\textit{other}}\>$}!
+	
+	Invokes the \lstinline!spar! routine, but with the assigned parentheses and size.
+	Here, \lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+\end{itemize}
+
+\section{Keys for setting the argument}
+
+\begin{itemize}
+	\item
+	\mylst!set arg keys={$\<keys\>$}!,
+	\mylst!arg keys set={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>.
+	
+	\item
+	\mylst!set arg keys x={$\<keys\>$}!,
+	\mylst!arg keys set x={$\<keys\>$}!
+	
+	Sets the argynebt keys \<keys\>, but fully expands their values.
+
+	\item
+	\mylst!set arg single keys={$\<keys\>$}!,
+	\mylst!arg single keys set={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	This allows the arguments to contain equality
+	signs without causing issues.
+
+	\item
+	\mylst!set arg single keys x={$\<keys\>$}!,
+	\mylst!arg single keys set x={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	If a key is not found, the value
+	is fully expanded and printed.
+	This allows the arguments to contain equality
+	signs without causing issues.
+	
+	\item
+	\mylst!set one arg single key={$\<key\>$}!,
+	\mylst!one arg single key set={$\<key\>$}!
+	
+	Sets one single argument key taking no values.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.
+
+	\item
+	\mylst!set one arg single key x={$\<key\>$}!,
+	\mylst!one arg single key set x={$\<key\>$}!
+	
+	Sets one single argument key taking no values,
+	If the key is not found, the value
+	is fully expanded and printed.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.
+	
+	\item
+	\mylst!set arg without keyval={$\<value\>$}!,
+	\mylst!arg without keyval set={$\<value\>$}!
+	
+	Sets the argument, allowing no keyval syntax.
+
+	\item
+	\mylst!set arg without keyval x={$\<value\>$}!,
+	\mylst!arg without keyval set x={$\<value\>$}!
+	
+	Sets the argument, fully expanding its value,
+	and allowing no keyval syntax.
+	
+	\item
+	\mylst!pre arg={$\<value\>$}!
+	
+	Sets the pre-argument.
+
+	\item
+	\mylst!pre arg put left={$\<value\>$}!
+	
+	Adds to the left of the pre-argument.
+	
+	\item
+	\mylst!post arg={$\<value\>$}!
+	
+	Sets the post-argument.
+
+	\item
+	\mylst!post arg put right={$\<value\>$}!
+	
+	Adds to the right of the post-argument.
+	
+	\item
+	\mylst!set arg sep={$\<value\>$}!
+	
+	Sets the argument separator.
+	The default value is a comma.
+	
+	\item
+	\mylst!set arg slot={$\<value\>$}!
+	
+	Sets the argument slot.
+	The default value is~\lstinline!{-}!.
+	
+	\item
+	\mylst!set arg dots={$\<value\>$}!
+	
+	Sets the argument dots.
+	The default value is~\lstinline!\dots!.
+	
+	\item
+	\mylst!arg keyval={$\values\<true|false|\default{single keys}|one single key\>$}!
+	
+	Sets whether to use argument keyval syntax or not.
+	If \lstinline!true!, \lstinline!arg! is set equal to~\lstinline!set arg keys!.
+	If \lstinline!false!, it is set to~\lstinline!set arg without keyval!.
+	If \lstinline!single keys!, it is set to~\lstinline!set arg single keys!.
+	If \lstinline!one single key!, it is set to~\lstinline!set one arg single key!.
+	The default value is~\lstinline!single keys!.
+	
+	\item
+	\mylst!arg position={$\values\<left|\default{right}\>$}!,
+	\mylst!arg pos={$\values\<left|\default{right}\>$}!
+	
+	Sets the position of the argument.
+	The default is~\lstinline!right!, so the argument
+	will be printed to the right of the symbol.
+	
+	\item
+	\mylst!next arg with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next argument should be
+	separated from the current one with a
+	separator or not.
+	The default is \lstinline!false!, but the
+	system will automatically change this when needed.
+	
+	\item
+	\mylst!sep arg={$\<value\>$}!
+	
+	Adds \<value\> to the argument, separated from any previous
+	argument by the default argument separator.
+	
+	\item
+	\mylst!comma arg={$\<value\>$}!
+	
+	Adds \<value\> to the argument, separated from any previous
+	argument by a comma.
+	
+	\item
+	\mylst!arg with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the argument, separated from any previous
+	argument by \<separator\>.
+	
+	\item
+	\mylst!arg ... with other sep={$\<separator\>$}!,
+	\mylst!arg dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the argument, separated from any previous
+	argument by the \<separator\>.
+
+	\item
+	\mylst!arg slot with other sep={$\<separator\>$}!
+	
+	Adds a slot to the argument, separated from any previous
+	argument by the \<separator\>.
+
+	\item
+	\mylst!arg dots!, \mylst!arg ...!
+	
+	Adds three dots to the argument,
+	separated from any previous arguments
+	by the standard separator.
+
+	\item
+	\mylst!comma arg dots!, \mylst!comma arg ...!
+	
+	Adds three dots to the argument,
+	separated from any previous arguments
+	by a comma.
+
+	\item
+	\mylst!arg slot!
+	
+	Adds a slot to the argument,
+	separated from any previous arguments
+	by the standard separator.
+
+	\item
+	\mylst!comma arg slot!
+	
+	Adds a slot to the argument,
+	separated from any previous arguments
+	by a comma.
+	
+	\item
+	\mylst!clear arg!
+	
+	Clears the argument.
+	
+	\item
+	\mylst!clear pre arg!
+	
+	Clears the pre-argument.
+	
+	\item
+	\mylst!clear post arg!
+	
+	Clears the post-argument.
+\end{itemize}
+
+
+\section{Keys for the upper index}
+
+\begin{itemize}
+	\item
+	\mylst!upper={$\<value\>$}!
+	
+	Adds to the upper index,
+	with no separator from any previous upper index.
+	
+	\item
+	\mylst!sep upper={$\<value\>$}!
+	
+	Adds to the upper index,
+	separated from any previous upper
+	index by the default separator.
+	
+	\item
+	\mylst!comma upper={$\<value\>$}!
+	
+	Adds to the upper index,
+	separated from any previous upper
+	index by a comma.
+	
+	\item
+	\mylst!pre upper={$\<value\>$}!
+	
+	Sets the pre-upper index.
+
+	\item
+	\mylst!pre upper put left={$\<value\>$}!
+	
+	Adds to the left of the pre-upper index.
+	
+	\item
+	\mylst!post upper={$\<value\>$}!
+	
+	Sets the post-upper index.
+
+	\item
+	\mylst!post upper put right={$\<value\>$}!
+	
+	Adds to the right of the post-upper index.
+	
+	\item
+	\mylst!upper put left={$\<value\>$}!
+	
+	Adds something to the left of the upper index.
+	As with keys like~\lstinline!upper!, this
+	will also increase the number of registered
+	upper indices by~\( 1 \), and
+	it will
+	set \lstinline!next upper with sep=true!.
+	
+	\item
+	\mylst!set upper sep={$\<value\>$}!
+	
+	Sets the upper index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next upper with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next upper index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!upper with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the upper index, separated from
+	any prevous upper index by~\<separator\>.
+	
+	\item
+	\mylst!upper slot!
+	
+	Adds a slot to the upper index,
+	with no separator from any previous upper index.
+	
+	\item
+	\mylst!sep upper slot!
+	
+	Adds a slot to the upper index,
+	separated from any previous upper
+	index by the default separator.
+
+	\item
+	\mylst!comma upper slot!
+	
+	Adds a slot to the upper index,
+	separated from any previous upper
+	index by a comma.
+	
+	\item
+	\mylst!set upper slot={$\<value\>$}!
+	
+	Sets the slot for the upper index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!upper slot with other sep={$\<separator\>$}!
+	
+	
+	Adds a slot to the upper index, separated
+	from any previous upper index by~\<separator\>.
+
+	\item
+	\mylst!upper ...!, \mylst!upper dots!
+	
+	Adds three dots to the upper index,
+	with no separator from any previous upper index.
+	
+	\item
+	\mylst!sep upper ...!, \mylst!sep upper dots!
+	
+	Adds three dots to the upper index,
+	separated from any previous upper
+	index by the default separator.
+
+	\item
+	\mylst!comma upper ...!, \mylst!comma upper dots!
+	
+	Adds three dots to the upper index,
+	separated from any previous upper
+	index by a comma.
+	
+	\item
+	\mylst!set upper dots={$\<value\>$}!
+	
+	Sets the dots for the upper index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!upper ... with other sep={$\<separator\>$}!,\\
+	\mylst!upper dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the upper index,
+	separated from any previous upper index
+	by~\<separator\>.
+	
+	\item
+	\mylst!upper *!
+	
+	Adds a bullet to the upper index,
+	with no separator from any previous upper index.
+
+	\item
+	\mylst!upper **!
+	
+	Adds a double bullet to the upper index,
+	with no separator from any previous upper index.
+
+	\item
+	\mylst!sep upper *!
+	
+	Adds a bullet to the upper index,
+	separated from any previous upper
+	index by the default separator.
+
+	\item
+	\mylst!sep upper **!
+	
+	Adds a double bullet to the upper index,
+	separated from any previous upper
+	index by the default separator.
+	
+	\item
+	\mylst!comma upper *!
+	
+	Adds a bullet to the upper index,
+	separated from any previous upper
+	index by a comma.
+
+	\item
+	\mylst!comma upper **!
+	
+	Adds a double bullet to the upper index,
+	separated from any previous upper
+	index by a comma.
+	
+	\item
+	\mylst!upper * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the upper index,
+	separated from any previous upper index
+	by~\<separator\>.
+
+	\item
+	\mylst!upper ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the upper index,
+	separated from any previous upper index
+	by~\<separator\>.
+
+	\item
+	\mylst!clear upper!
+	
+	Clears the upper index.
+	
+	\item
+	\mylst!clear pre upper!
+	
+	Clears the pre-upper index.
+	
+	\item
+	\mylst!clear post upper!
+	
+	Clears the post-upper index.
+\end{itemize}
+
+\section{Keys for the lower index}
+
+\begin{itemize}
+	\item
+	\mylst!lower={$\<value\>$}!
+	
+	Adds to the lower index,
+	with no separator from any previous lower index.
+	
+	\item
+	\mylst!sep lower={$\<value\>$}!
+	
+	Adds to the lower index,
+	separated from any previous lower
+	index by the default separator.
+	
+	\item
+	\mylst!comma lower={$\<value\>$}!
+	
+	Adds to the lower index,
+	separated from any previous lower
+	index by a comma.
+	
+	\item
+	\mylst!pre lower={$\<value\>$}!
+	
+	Sets the pre-lower index.
+
+	\item
+	\mylst!pre lower put left={$\<value\>$}!
+	
+	Adds to the left of the pre-lower index.
+	
+	\item
+	\mylst!post lower={$\<value\>$}!
+	
+	Sets the post-lower index.
+
+	\item
+	\mylst!post lower put right={$\<value\>$}!
+	
+	Adds to the right of the post-lower index.
+	
+	\item
+	\mylst!lower put left={$\<value\>$}!
+	
+	Adds something to the left of the lower index.
+	As with keys like~\lstinline!lower!, this
+	will also increase the number of registered
+	lower indices by~\( 1 \), and
+	it will
+	set \lstinline!next lower with sep=true!.
+	
+	\item
+	\mylst!set lower sep={$\<value\>$}!
+	
+	Sets the lower index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next lower with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next lower index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!lower with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the lower index, separated from
+	any prevous lower index by~\<separator\>.
+	
+	\item
+	\mylst!lower slot!
+	
+	Adds a slot to the lower index,
+	with no separator from any previous lower index.
+	
+	\item
+	\mylst!sep lower slot!
+	
+	Adds a slot to the lower index,
+	separated from any previous lower
+	index by the default separator.
+
+	\item
+	\mylst!comma lower slot!
+	
+	Adds a slot to the lower index,
+	separated from any previous lower
+	index by a comma.
+	
+	\item
+	\mylst!set lower slot={$\<value\>$}!
+	
+	Sets the slot for the lower index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!lower slot with other sep={$\<separator\>$}!
+	
+	
+	Adds a slot to the lower index, separated
+	from any previous lower index by~\<separator\>.
+
+	\item
+	\mylst!lower ...!, \mylst!lower dots!
+	
+	Adds three dots to the lower index,
+	with no separator from any previous lower index.
+	
+	\item
+	\mylst!sep lower ...!, \mylst!sep lower dots!
+	
+	Adds three dots to the lower index,
+	separated from any previous lower
+	index by the default separator.
+
+	\item
+	\mylst!comma lower ...!, \mylst!comma lower dots!
+	
+	Adds three dots to the lower index,
+	separated from any previous lower
+	index by a comma.
+	
+	\item
+	\mylst!set lower dots={$\<value\>$}!
+	
+	Sets the dots for the lower index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!lower ... with other sep={$\<separator\>$}!,\\
+	\mylst!lower dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the lower index,
+	separated from any previous lower index
+	by~\<separator\>.
+	
+	\item
+	\mylst!lower *!
+	
+	Adds a bullet to the lower index,
+	with no separator from any previous lower index.
+
+	\item
+	\mylst!lower **!
+	
+	Adds a double bullet to the lower index,
+	with no separator from any previous lower index.
+
+	\item
+	\mylst!sep lower *!
+	
+	Adds a bullet to the lower index,
+	separated from any previous lower
+	index by the default separator.
+
+	\item
+	\mylst!sep lower **!
+	
+	Adds a double bullet to the lower index,
+	separated from any previous lower
+	index by the default separator.
+	
+	\item
+	\mylst!comma lower *!
+	
+	Adds a bullet to the lower index,
+	separated from any previous lower
+	index by a comma.
+
+	\item
+	\mylst!comma lower **!
+	
+	Adds a double bullet to the lower index,
+	separated from any previous lower
+	index by a comma.
+	
+	\item
+	\mylst!lower * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the lower index,
+	separated from any previous lower index
+	by~\<separator\>.
+
+	\item
+	\mylst!lower ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the lower index,
+	separated from any previous lower index
+	by~\<separator\>.
+
+	\item
+	\mylst!clearlower!
+	
+	Clears the lower index.
+	
+	\item
+	\mylst!clear pre lower!
+	
+	Clears the pre-lower index.
+	
+	\item
+	\mylst!clear post lower!
+	
+	Clears the post-lower index.
+\end{itemize}
+
+\section{Keys for the upper left index}
+
+\begin{itemize}
+	\item
+	\mylst!upper left={$\<value\>$}!
+	
+	Adds to the upper left index,
+	with no separator from any previous upper left index.
+	
+	\item
+	\mylst!sep upper left={$\<value\>$}!
+	
+	Adds to the upper left index,
+	separated from any previous upper left
+	index by the default separator.
+	
+	\item
+	\mylst!comma upper left={$\<value\>$}!
+	
+	Adds to the upper left index,
+	separated from any previous upper left
+	index by a comma.
+	
+	\item
+	\mylst!pre upper left={$\<value\>$}!
+	
+	Sets the pre-upper left index.
+
+	\item
+	\mylst!pre upper left put left={$\<value\>$}!
+	
+	Adds to the left of the pre-upper left index.
+	
+	\item
+	\mylst!post upper left={$\<value\>$}!
+	
+	Sets the post-upper left index.
+
+	\item
+	\mylst!post upper left put right={$\<value\>$}!
+	
+	Adds to the right of the post-upper left index.
+	
+	\item
+	\mylst!upper left put right={$\<value\>$}!
+	
+	Adds something to the right of the upper left index.
+	As with keys like~\lstinline!upper left!, this
+	will also increase the number of registered
+	upper left indices by~\( 1 \), and
+	it will
+	set \lstinline!next upper left with sep=true!.
+	
+	\item
+	\mylst!set upper left sep={$\<value\>$}!
+	
+	Sets the upper left index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next upper left with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next upper left index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!upper left with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the upper left index, separated from
+	any prevous upper left index by~\<separator\>.
+	
+	\item
+	\mylst!upper left slot!
+	
+	Adds a slot to the upper left index,
+	with no separator from any previous upper left index.
+	
+	\item
+	\mylst!sep upper left slot!
+	
+	Adds a slot to the upper left index,
+	separated from any previous upper left
+	index by the default separator.
+
+	\item
+	\mylst!comma upper left slot!
+	
+	Adds a slot to the upper left index,
+	separated from any previous upper left
+	index by a comma.
+	
+	\item
+	\mylst!set upper left slot={$\<value\>$}!
+	
+	Sets the slot for the upper left index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!upper left slot with other sep={$\<separator\>$}!
+	
+	
+	Adds a slot to the upper left index, separated
+	from any previous upper left index by~\<separator\>.
+
+	\item
+	\mylst!upper left ...!, \mylst!upper left dots!
+	
+	Adds three dots to the upper left index,
+	with no separator from any previous upper left index.
+	
+	\item
+	\mylst!sep upper left ...!, \mylst!sep upper left dots!
+	
+	Adds three dots to the upper left index,
+	separated from any previous upper left
+	index by the default separator.
+
+	\item
+	\mylst!comma upper left ...!, \mylst!comma upper left dots!
+	
+	Adds three dots to the upper left index,
+	separated from any previous upper left
+	index by a comma.
+	
+	\item
+	\mylst!set upper left dots={$\<value\>$}!
+	
+	Sets the dots for the upper left index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!upper left ... with other sep={$\<separator\>$}!,\\
+	\mylst!upper left dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the upper left index,
+	separated from any previous upper left index
+	by~\<separator\>.
+	
+	\item
+	\mylst!upper left *!
+	
+	Adds a bullet to the upper left index,
+	with no separator from any previous upper left index.
+
+	\item
+	\mylst!upper left **!
+	
+	Adds a double bullet to the upper left index,
+	with no separator from any previous upper left index.
+
+	\item
+	\mylst!sep upper left *!
+	
+	Adds a bullet to the upper left index,
+	separated from any previous upper left
+	index by the default separator.
+
+	\item
+	\mylst!sep upper left **!
+	
+	Adds a double bullet to the upper left index,
+	separated from any previous upper left
+	index by the default separator.
+	
+	\item
+	\mylst!comma upper left *!
+	
+	Adds a bullet to the upper left index,
+	separated from any previous upper left
+	index by a comma.
+
+	\item
+	\mylst!comma upper left **!
+	
+	Adds a double bullet to the upper left index,
+	separated from any previous upper left
+	index by a comma.
+	
+	\item
+	\mylst!upper left * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the upper left index,
+	separated from any previous upper left index
+	by~\<separator\>.
+
+	\item
+	\mylst!upper left ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the upper left index,
+	separated from any previous upper left index
+	by~\<separator\>.
+
+	\item
+	\mylst!clearupper left!
+	
+	Clears the upper left index.
+	
+	\item
+	\mylst!clear pre upper left!
+	
+	Clears the pre-upper left index.
+	
+	\item
+	\mylst!clear post upper left!
+	
+	Clears the post-upper left index.
+\end{itemize}
+
+\section{Keys for the lower left index}
+
+\begin{itemize}
+	\item
+	\mylst!lower left={$\<value\>$}!
+	
+	Adds to the lower left index,
+	with no separator from any previous lower left index.
+	
+	\item
+	\mylst!sep lower left={$\<value\>$}!
+	
+	Adds to the lower left index,
+	separated from any previous lower left
+	index by the default separator.
+	
+	\item
+	\mylst!comma lower left={$\<value\>$}!
+	
+	Adds to the lower left index,
+	separated from any previous lower left
+	index by a comma.
+	
+	\item
+	\mylst!pre lower left={$\<value\>$}!
+	
+	Sets the pre-lower left index.
+
+	\item
+	\mylst!pre lower left put left={$\<value\>$}!
+	
+	Adds to the left of the pre-lower left index.
+	
+	\item
+	\mylst!post lower left={$\<value\>$}!
+	
+	Sets the post-lower left index.
+
+	\item
+	\mylst!post lower left put right={$\<value\>$}!
+	
+	Adds to the right of the post-lower left index.
+	
+	\item
+	\mylst!lower left put right={$\<value\>$}!
+	
+	Adds something to the right of the lower left index.
+	As with keys like~\lstinline!lower left!, this
+	will also increase the number of registered
+	lower left indices by~\( 1 \), and
+	it will
+	set \lstinline!next lower left with sep=true!.
+	
+	\item
+	\mylst!set lower left sep={$\<value\>$}!
+	
+	Sets the lower left index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next lower left with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next lower left index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!lower left with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the lower left index, separated from
+	any prevous lower left index by~\<separator\>.
+	
+	\item
+	\mylst!lower left slot!
+	
+	Adds a slot to the lower left index,
+	with no separator from any previous lower left index.
+	
+	\item
+	\mylst!sep lower left slot!
+	
+	Adds a slot to the lower left index,
+	separated from any previous lower left
+	index by the default separator.
+
+	\item
+	\mylst!comma lower left slot!
+	
+	Adds a slot to the lower left index,
+	separated from any previous lower left
+	index by a comma.
+	
+	\item
+	\mylst!set lower left slot={$\<value\>$}!
+	
+	Sets the slot for the lower left index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!lower left slot with other sep={$\<separator\>$}!
+	
+	
+	Adds a slot to the lower left index, separated
+	from any previous lower left index by~\<separator\>.
+
+	\item
+	\mylst!lower left ...!, \mylst!lower left dots!
+	
+	Adds three dots to the lower left index,
+	with no separator from any previous lower left index.
+	
+	\item
+	\mylst!sep lower left ...!, \mylst!sep lower left dots!
+	
+	Adds three dots to the lower left index,
+	separated from any previous lower left
+	index by the default separator.
+
+	\item
+	\mylst!comma lower left ...!, \mylst!comma lower left dots!
+	
+	Adds three dots to the lower left index,
+	separated from any previous lower left
+	index by a comma.
+	
+	\item
+	\mylst!set lower left dots={$\<value\>$}!
+	
+	Sets the dots for the lower left index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!lower left ... with other sep={$\<separator\>$}!,\\
+	\mylst!lower left dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the lower left index,
+	separated from any previous lower left index
+	by~\<separator\>.
+	
+	\item
+	\mylst!lower left *!
+	
+	Adds a bullet to the lower left index,
+	with no separator from any previous lower left index.
+
+	\item
+	\mylst!lower left **!
+	
+	Adds a double bullet to the lower left index,
+	with no separator from any previous lower left index.
+
+	\item
+	\mylst!sep lower left *!
+	
+	Adds a bullet to the lower left index,
+	separated from any previous lower left
+	index by the default separator.
+
+	\item
+	\mylst!sep lower left **!
+	
+	Adds a double bullet to the lower left index,
+	separated from any previous lower left
+	index by the default separator.
+	
+	\item
+	\mylst!comma lower left *!
+	
+	Adds a bullet to the lower left index,
+	separated from any previous lower left
+	index by a comma.
+
+	\item
+	\mylst!comma lower left **!
+	
+	Adds a double bullet to the lower left index,
+	separated from any previous lower left
+	index by a comma.
+	
+	\item
+	\mylst!lower left * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the lower left index,
+	separated from any previous lower left index
+	by~\<separator\>.
+
+	\item
+	\mylst!lower left ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the lower left index,
+	separated from any previous lower left index
+	by~\<separator\>.
+
+	\item
+	\mylst!clearlower left!
+	
+	Clears the lower left index.
+	
+	\item
+	\mylst!clear pre lower left!
+	
+	Clears the pre-lower left index.
+	
+	\item
+	\mylst!clear post lower left!
+	
+	Clears the post-lower left index.
+\end{itemize}
+
+\section{Keys for the \texttt{d}-index}
+
+\begin{itemize}
+	\item
+	\mylst!d={$\<value\>$}!
+	
+	Adds to the \lstinline!d!-index,
+	with no separator from any previous \lstinline!d!-index.
+	
+	\item
+	\mylst!sep d={$\<value\>$}!
+	
+	Adds to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by the default separator.
+	
+	\item
+	\mylst!comma d={$\<value\>$}!
+	
+	Adds to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by a comma.
+	
+	\item
+	\mylst!pre d={$\<value\>$}!
+	
+	Sets the pre-\lstinline!d!-index.
+
+	\item
+	\mylst!pre d put left={$\<value\>$}!
+	
+	Adds to the left of the pre-\lstinline!d!-index.
+	
+	\item
+	\mylst!post d={$\<value\>$}!
+	
+	Sets the post-\lstinline!d!-index.
+
+	\item
+	\mylst!post d put right={$\<value\>$}!
+	
+	Adds to the right of the post-\lstinline!d!-index.
+	
+	\item
+	\mylst!d put left={$\<value\>$}!
+	
+	Adds something to the left of the \lstinline!d!-index.
+	As with keys like~\lstinline!d!, this
+	will also increase the number of registered
+	\lstinline!d!-indices by~\( 1 \), and
+	it will
+	set \lstinline!next d with sep=true!.
+	
+	\item
+	\mylst!set d sep={$\<value\>$}!
+	
+	Sets the \lstinline!d!-index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next d with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next \lstinline!d!-index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!d with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the \lstinline!d!-index, separated from
+	any prevous \lstinline!d!-index by~\<separator\>.
+	
+	\item
+	\mylst!d slot!
+	
+	Adds a slot to the \lstinline!d!-index,
+	with no separator from any previous \lstinline!d!-index.
+	
+	\item
+	\mylst!sep d slot!
+	
+	Adds a slot to the \lstinline!d!-index,
+	separated from any previous  \lstinline!d!-index
+	by the default separator.
+
+	\item
+	\mylst!comma d slot!
+	
+	Adds a slot to the \lstinline!d!-index,
+	separated from any previous  \lstinline!d!-index
+	by a comma.
+	
+	\item
+	\mylst!set d slot={$\<value\>$}!
+	
+	Sets the slot for the \lstinline!d!-index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!d slot with other sep={$\<separator\>$}!
+		
+	Adds a slot to the \lstinline!d!-index, separated
+	from any previous \lstinline!d!-index by~\<separator\>.
+
+	\item
+	\mylst!d ...!, \mylst!d dots!
+	
+	Adds three dots to the \lstinline!d!-index,
+	with no separator from any previous \lstinline!d!-index.
+	
+	\item
+	\mylst!sep d ...!, \mylst!sep d dots!
+	
+	Adds three dots to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by the default separator.
+
+	\item
+	\mylst!comma d ...!, \mylst!comma d dots!
+	
+	Adds three dots to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by a comma.
+	
+	\item
+	\mylst!set d dots={$\<value\>$}!
+	
+	Sets the dots for the \lstinline!d!-index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!d ... with other sep={$\<separator\>$}!,
+	\mylst!d dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by~\<separator\>.
+	
+	\item
+	\mylst!d *!
+	
+	Adds a bullet to the \lstinline!d!-index,
+	with no separator from any previous \lstinline!d!-index.
+
+	\item
+	\mylst!d **!
+	
+	Adds a double bullet to the \lstinline!d!-index,
+	with no separator from any previous \lstinline!d!-index.
+
+	\item
+	\mylst!sep d *!
+	
+	Adds a bullet to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by the default separator.
+
+	\item
+	\mylst!sep d **!
+	
+	Adds a double bullet to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	 by the default separator.
+	
+	\item
+	\mylst!comma d *!
+	
+	Adds a bullet to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by a comma.
+
+	\item
+	\mylst!comma d **!
+	
+	Adds a double bullet to the \lstinline!d!-index,
+	separated from any previous  \lstinline!d!-index
+	by a comma.
+	
+	\item
+	\mylst!d * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by~\<separator\>.
+
+	\item
+	\mylst!d ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the \lstinline!d!-index,
+	separated from any previous \lstinline!d!-index
+	by~\<separator\>.
+
+	\item
+	\mylst!clear d!
+	
+	Clears the \lstinline!d!-index.
+	
+	\item
+	\mylst!clear pre d!
+	
+	Clears the pre-\lstinline!d!-index.
+	
+	\item
+	\mylst!clear post d!
+	
+	Clears the post-\lstinline!d!-index.
+\end{itemize}
+
+\section{Keys for the \texttt{i}-index}
+
+\begin{itemize}
+	\item
+	\mylst!i={$\<value\>$}!
+	
+	Adds to the \lstinline!i!-index,
+	with no separator from any previous \lstinline!i!-index.
+	
+	\item
+	\mylst!sep i={$\<value\>$}!
+	
+	Adds to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by the default separator.
+	
+	\item
+	\mylst!comma i={$\<value\>$}!
+	
+	Adds to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by a comma.
+	
+	\item
+	\mylst!pre i={$\<value\>$}!
+	
+	Sets the pre-\lstinline!i!-index.
+
+	\item
+	\mylst!pre i put left={$\<value\>$}!
+	
+	Adds to the left of the pre-\lstinline!i!-index.
+	
+	\item
+	\mylst!post i={$\<value\>$}!
+	
+	Sets the post-\lstinline!i!-index.
+
+	\item
+	\mylst!post i put right={$\<value\>$}!
+	
+	Adds to the right of the post-\lstinline!i!-index.
+	
+	\item
+	\mylst!i put left={$\<value\>$}!
+	
+	Adds something to the left of the \lstinline!i!-index.
+	As with keys like~\lstinline!i!, this
+	will also increase the number of registered
+	\lstinline!i!-indices by~\( 1 \), and
+	it will
+	set \lstinline!next i with sep=true!.
+	
+	\item
+	\mylst!set i sep={$\<value\>$}!
+	
+	Sets the \lstinline!i!-index separator to~\<value\>.
+	By default, this is a comma.
+	
+	\item
+	\mylst!next i with sep={$\values\<true|\default{false}\>$}!
+	
+	Sets whether the next \lstinline!i!-index should
+	be separated from the current one by a separator.
+	
+	\item
+	\mylst!i with other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the \lstinline!i!-index, separated from
+	any prevous \lstinline!i!-index by~\<separator\>.
+	
+	\item
+	\mylst!i slot!
+	
+	Adds a slot to the \lstinline!i!-index,
+	with no separator from any previous \lstinline!i!-index.
+	
+	\item
+	\mylst!sep i slot!
+	
+	Adds a slot to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by the default separator.
+
+	\item
+	\mylst!comma i slot!
+	
+	Adds a slot to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by a comma.
+	
+	\item
+	\mylst!set i slot={$\<value\>$}!
+	
+	Sets the slot for the \lstinline!i!-index.
+	By default, this is~\lstinline!{-}!.
+	
+	\item
+	\mylst!i slot with other sep={$\<separator\>$}!
+	
+	
+	Adds a slot to the \lstinline!i!-index, separated
+	from any previous \lstinline!i!-index by~\<separator\>.
+
+	\item
+	\mylst!i ...!, \mylst!i dots!
+	
+	Adds three dots to the \lstinline!i!-index,
+	with no separator from any previous \lstinline!i!-index.
+	
+	\item
+	\mylst!sep i ...!, \mylst!sep i dots!
+	
+	Adds three dots to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by the default separator.
+
+	\item
+	\mylst!comma i ...!, \mylst!comma i dots!
+	
+	Adds three dots to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by a comma.
+	
+	\item
+	\mylst!set i dots={$\<value\>$}!
+	
+	Sets the dots for the \lstinline!i!-index.
+	By default, this is~\lstinline!\dots!.
+	
+	\item
+	\mylst!i ... with other sep={$\<separator\>$}!,
+	\mylst!i dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by~\<separator\>.
+	
+	\item
+	\mylst!i *!
+	
+	Adds a bullet to the \lstinline!i!-index,
+	with no separator from any previous \lstinline!i!-index.
+
+	\item
+	\mylst!i **!
+	
+	Adds a double bullet to the \lstinline!i!-index,
+	with no separator from any previous \lstinline!i!-index.
+
+	\item
+	\mylst!sep i *!
+	
+	Adds a bullet to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by the default separator.
+
+	\item
+	\mylst!sep i **!
+	
+	Adds a double bullet to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by the default separator.
+	
+	\item
+	\mylst!comma i *!
+	
+	Adds a bullet to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by a comma.
+
+	\item
+	\mylst!comma i **!
+	
+	Adds a double bullet to the \lstinline!i!-index,
+	separated from any previous
+	\lstinline!i!-index by a comma.
+	
+	\item
+	\mylst!i * with other sep={$\<separator\>$}!
+	
+	Adds a bullet to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by~\<separator\>.
+
+	\item
+	\mylst!i ** with other sep={$\<separator\>$}!
+	
+	Adds a double bullet to the \lstinline!i!-index,
+	separated from any previous \lstinline!i!-index
+	by~\<separator\>.
+
+	\item
+	\mylst!clear i!
+	
+	Clears the \lstinline!i!-index.
+	
+	\item
+	\mylst!clear pre i!
+	
+	Clears the pre-\lstinline!i!-index.
+	
+	\item
+	\mylst!clear post i!
+	
+	Clears the post-\lstinline!i!-index.
+\end{itemize}
+
+\section{The predefined argument keys}\label{sec:predefined_arg_keys}
+
+These are the predefined keys that work inside the argument.
+
+\begin{itemize}
+	\item
+	\mylst!execute={$\<code\>$}!
+	
+	Executes the \<code\> on the spot.
+	This is not strictly speaking a logic key,
+	but this allows you to perform logical
+	operations that are not allowed
+	by the other logic keys.
+
+	\item
+	\mylst!set keys={$\<keys\>$}!,
+	\mylst!keys set={$\<keys\>$}!
+	
+	Sets the keys \<keys\>.
+	
+	\item
+	\mylst!set keys x={$\<keys\>$}!,
+	\mylst!keys set x={$\<keys\>$}!
+	
+	Sets the keys \<keys\>, but fully expands their values.
+	
+	\item
+	\mylst!set arg keys={$\<keys\>$}!,
+	\mylst!arg keys set={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>.
+	
+	\item
+	\mylst!set arg keys x={$\<keys\>$}!,
+	\mylst!arg keys set x={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>, but fully expands their values.
+
+	\item
+	\mylst!set arg single keys={$\<keys\>$}!,
+	\mylst!arg single keys set={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	This allows the arguments to contain equality
+	signs without causing issues.
+
+	\item
+	\mylst!set arg single keys x={$\<keys\>$}!,
+	\mylst!arg single keys set x={$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	If a key is not found, the value
+	is fully expanded and printed.
+	This allows the arguments to contain equality
+	signs without causing issues.
+	
+	\item
+	\mylst!set one arg single key={$\<key\>$}!,
+	\mylst!one arg single key set={$\<key\>$}!
+	
+	Sets one single argument key taking no values.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.
+
+	\item
+	\mylst!set one arg single key x={$\<key\>$}!,
+	\mylst!one arg single key set x={$\<key\>$}!
+	
+	Sets one single argument key taking no values,
+	If the key is not found, the value
+	is fully expanded and printed.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.
+	
+	\item
+	\mylst!set arg without keyval={$\<value\>$}!,
+	\mylst!arg without keyval set={$\<value\>$}!
+	
+	Sets the argument, allowing no keyval syntax.
+
+	\item
+	\mylst!set arg without keyval x={$\<value\>$}!,
+	\mylst!arg without keyval set x={$\<value\>$}!
+	
+	Sets the argument, fully expanding its value,
+	and allowing no keyval syntax.
+	
+	\item
+	\mylst!default={$\<value\>$}!
+	
+	This is the value that is applied whenever
+	a value is passed to the argument that is not
+	recognized as a key, e.g.~the~\lstinline!\vx!
+	in~\lstinline!\vf{\vx}!.
+	By default, this is set to be equivalent
+	to~\lstinline!sep!.
+	
+	\item
+	\mylst!sep={$\<value\>$}!
+	
+	Adds the \<value\> to the argument,
+	separated from any previous argument
+	by the default separator.
+
+	\item
+	\mylst!comma={$\<value\>$}!
+	
+	Adds the \<value\> to the argument,
+	separated from any previous argument
+	by a comma.
+	
+	\item
+	\mylst!slot!
+	
+	Adds a slot to the argument,
+	separated from any previous argument
+	by the default separator.
+	
+	\item
+	\mylst!comma slot!
+	
+	Adds a slot to the argument,
+	separated from any previous argument
+	by a comma.
+	
+	\item
+	\mylst!...!, \mylst!dots!
+	
+	Adds three dots to the argument,
+	separated from any previous argument
+	by the default separator.
+	
+	\item
+	\mylst!comma ...!, \mylst!comma dots!
+	
+	Adds three dots to the argument,
+	separated from any previous argument
+	by a comma.
+	
+	\item
+	\mylst!other sep={$\<separator\>$}{$\<value\>$}!
+	
+	Adds \<value\> to the argument,
+	separated from any previous argument
+	by~\<separator\>.
+	
+	\item
+	\mylst!slot with other sep={$\<separator\>$}!
+	
+	Adds a slot to the argument, separated
+	from any previous argument by \<separator\>.
+
+	\item
+	\mylst!... with other sep={$\<separator\>$}! ,
+	\mylst!dots with other sep={$\<separator\>$}!
+	
+	Adds three dots to the argument, separated
+	from any previous argument by~\<separator\>.
+\end{itemize}
+
+\section{The programming commands}\label{sec:programming_commands}
+
+The following commands are available for programming inside keys, including \lstinline!execute={...}!:
+
+\begin{itemize}
+	\item
+	\mylst!\SemantexThis!
+	
+	Returns the name of the current class or object. It is returned in the format \mylst!object_$\<name of object without backslash\>$!
+	and \mylst!class_$\<name of class without backslash\>$!,
+	which is the way the names are stored internally.
+	
+	\item
+	\mylst!\SemantexSetKeys{$\<keys\>$}!,
+	\mylst!\SemantexKeysSet{$\<keys\>$}!
+	
+	Sets the \<keys\>.
+
+	\item
+	\mylst!\SemantexSetKeysx{$\<keys\>$}!,
+	\mylst!\SemantexKeysSetx{$\<keys\>$}!
+	
+	Sets the \<keys\>, but fully expands their values.
+	
+	\item
+	\mylst!\SemantexSetArgKeys{$\<keys\>$}!,
+	\mylst!\SemantexArgKeysSet{$\<keys\>$}!
+	
+	Sets the argument \<keys\>.
+
+	\item
+	\mylst!\SemantexSetArgKeysx{$\<keys\>$}!,
+	\mylst!\SemantexArgKeysSetx{$\<keys\>$}!
+	
+	Sets the argument \<keys\>, but fully expands their values.
+
+	\item
+	\mylst!\SemantexSetArgSingleKeys{$\<keys\>$}!,
+	\mylst!\SemantexArgSingleKeysSet{$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	This allows the arguments to contain equality
+	signs without causing issues.	
+
+	\item
+	\mylst!\SemantexSetArgSingleKeysx{$\<keys\>$}!,
+	\mylst!\SemantexArgSingleKeysSetx{$\<keys\>$}!
+	
+	Sets the argument keys \<keys\>,
+	but only supports keys taking no values.
+	If a key is not found, the value
+	is fully expanded and printed.
+	This allows the arguments to contain equality
+	signs without causing issues.
+
+	\item
+	\mylst!\SemantexSetOneArgSingleKey{$\<keys\>$}!,
+	\mylst!\SemantexOneSingleArgKeySet{$\<keys\>$}!
+	
+	Sets one single argument key taking no values.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.
+
+	\item
+	\mylst!\SemantexSetOneArgSingleKeyx{$\<keys\>$}!,
+	\mylst!\SemantexOneSingleArgKeySetx{$\<keys\>$}!
+	
+	Sets one single argument key taking no values,
+	If the key is not found, the value
+	is fully expanded and printed.
+	This allows the argument to contain
+	equality signs and commas without cuasing issues.	
+
+	\item
+	\mylst!\SemantexSetArgWithoutKeyval{$\<value\>$}!,
+	\mylst!\SemantexArgWithoutKeyvalSet{$\<value\>$}!
+	
+	Sets the argument, allowing no keyval syntax.
+	
+	\item
+	\mylst!\SemantexSetArgWithoutKeyval{$\<value\>$}!,
+	\mylst!\SemantexArgWithoutKeyvalSet{$\<value\>$}!
+	
+	Sets the argument, fully expanding its value,
+	and allowing no keyval syntax.
+	
+	\item
+	\mylst!\SemantexDataProvide{$\<data\>$}!
+	
+	Provides a new piece of data consisting of a token list.
+	
+	\item
+	\mylst!\SemantexDataSet{$\<data\>$}{$\<value\>$}!
+		
+	Sets the \<data\> to \<value\>.
+	
+	\item
+	\mylst!\SemantexDataSetx{$\<data\>$}{$\<value\>$}!
+		
+	Sets the \<data\> to \<value\>, but fully expands the \<value\> first.
+
+	\item
+	\mylst!\SemantexDataPutLeft{$\<data\>$}{$\<value\>$}!
+		
+	Adds the \<value\> to the left of \<data\>.
+	
+	\item
+	\mylst!\SemantexDataPutLeftx{$\<data\>$}{$\<value\>$}!
+		
+	Adds the \<value\> to the left of \<data\>, but fully expands the \<value\> first.
+	
+	\item
+	\mylst!\SemantexDataPutRight{$\<data\>$}{$\<value\>$}!
+		
+	Adds the \<value\> to the right of \<data\>.
+
+	\item
+	\mylst!\SemantexDataPutRightx{$\<data\>$}{$\<value\>$}!
+		
+	Adds the \<value\> to the right of \<data\>, but fully expands the \<value\> first.
+	
+	\item
+	\mylst!\SemantexDataGet{$\<data\>$}!
+	
+	Returns the value of \<data\>.
+	
+	\item
+	\mylst!\SemantexDataGetExpNot{$\<data\>$}!
+	
+	Returns the value of \<data\>,
+	enclosed in \lstinline!\unexpanded!
+	so that it can be used within an \lstinline!x!-type
+	expansion.
+	
+	\item
+	\mylst!\SemantexDataClear{$\<data\>$}!
+	
+	Clears the piece of data~\<data\>.
+	
+	\item
+	\mylst!\SemantexBoolProvide{$\<boolean\>$}!
+	
+	Provides a new piece of data consisting of a boolean.
+	
+	\item
+	\mylst!\SemantexBoolSetTrue{$\<boolean\>$}!
+	
+	Sets the \<boolean\> to true.
+	
+	\item
+	\mylst!\SemantexBoolSetFalse{$\<boolean\>$}!
+	
+	Sets the \<boolean\> to false.
+	
+	\item
+	\mylst!\SemantexBoolIfTF{$\<boolean\>$}{$\<if true\>$}{$\<if false\>$}!,\\
+	\mylst!\SemantexBoolIfT{$\<boolean\>$}{$\<if true\>$}!,\\
+	\mylst!\SemantexBoolIfF{$\<boolean\>$}{$\<if false\>$}!
+	
+	Runs \<if~true\> or \<if~false\>, depending on the value of \<boolean\>.
+	
+	\item
+	\mylst!\SemantexIntProvide{$\<integer\>$}!
+		
+	Provides a new piece of data consisting of an integer.
+	
+	\item
+	\mylst!\SemantexIntGet{$\<integer\>$}!
+	
+	Returns the value of the \<integer\>.
+	
+	\item
+	\mylst!\SemantexIntSet{$\<integer\>$}{$\<value\>$}!
+		
+	Sets the \<integer\> to \<value\>.
+	
+	\item
+	\mylst!\SemantexIntIncr{$\<integer\>$}!
+		
+	Increases the \<integer\> by~\( 1 \).
+
+	\item
+	\mylst!\SemantexIntIfEqTF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!\SemantexIntIfEqT$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!\SemantexIntIfEqF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+		
+	Checks whether the integers \<integer\num{1}\> and \<integer\num{2}\> are equal,
+	and runs \<if~true\> or \<if~false\> accordingly.
+	
+	\item
+	\mylst!\SemantexIntIfGreaterTF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!\SemantexIntIfGreaterT{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!\SemantexIntIfGreaterF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+		
+	Checks whether the integer \<integer\num{1}\> is greater than~\<integer\num{2}\>,
+	and runs \<if~true\> or \<if~false\> accordingly.
+
+	\item
+	\mylst!\SemantexIntIfLessTF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!\SemantexIntIfLessT{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!\SemantexIntIfLessF{$\<integer\num{1}\>$}{$\<integer\num{2}\>$}{$\<if false\>$}!
+	
+	Checks whether the integer \<integer\num{1}\> is less than~\<integer\num{2}\>,
+	and runs \<if~true\> or \<if~false\> accordingly.
+	
+	\item
+	\mylst!\SemantexIntClear{$\<integer\>$}!
+		
+	Clears the \<integer\>, i.e.~sets it to~\( 0 \).
+
+	\item
+	\mylst!\SemantexIfBlankTF{$\<tokens\>$}{$\<if true\>$}{$\<if false\>$}!,\\
+	\mylst!\SemantexIfBlankT{$\<tokens\>$}{$\<if true\>$}!,\\
+	\mylst!\SemantexIfBlankF{$\<tokens\>$}{$\<if false\>$}!
+		
+	Fully expands the \<tokens\> and checks if it is blank,
+	and runs \<if true\> or \<if false\> according to this.
+
+	\item
+	\mylst!\SemantexStrIfEqTF{$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if true\>$}{$\<if false\>$}!, \\
+	\mylst!\SemantexStrIfEqT{$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if true\>$}!, \\
+	\mylst!\SemantexStrIfEqF{$\<string\num{1}\>$}{$\<string\num{2}\>$}{$\<if false\>$}!
+		
+	Checks whether the strings \<string\num{1}\> and \<string\num{2}\> are equal,
+	and runs \<if~true\> or \<if~false\> accordingly.
+
+	\item
+	\mylst!\SemantexERROR{$\<error message\>$}!
+		
+	Issues an generic error message. At the end of the message, it automatically adds \enquote{object~\usercommand\<object name\> on line~\<line number\>}
+	or \enquote{class~\usercommand\<Class name\> on line~\<line number\>}.
+	
+	\item
+	\mylst!\SemantexERRORKeyValueNotFound{$\<key\>$}{$\<value\>$}!
+	
+	Issues an error, saying that the key~\<key\> was set to the unknown value~\<value\>.
+
+	\item
+	\mylst!\SemantexERRORArgKeyValueNotFound{$\<key\>$}{$\<value\>$}!
+	
+	Issues an error, saying that the argument key~\<key\> was set to the unknown value~\<value\>.
+
+	\item
+	\mylst!\SemantexExpNot{$\<value\>$}!
+	
+	An alias for \lstinline!\unexpanded! (also known as \lstinline!\exp_not:N! in~\LaTeX3).
+\end{itemize}
+
+\section{The class types}
+
+The \semantex{} system uses several different \emph{class types}.
+In fact, all class types are identical internally; the low-level machinery of \semantex{} does not \enquote{know} what type a class has.
+The only difference between the class types is the \emph{input syntax}.
+In other words, it determines which arguments an object of that class
+can take. The syntax for creating new objects
+also varies.
+
+The current implementation has the following
+class types:
+
+\begin{itemize}
+	\item \lstinline!Variable!:
+	A new class is declared with the
+	syntax
+	\begin{lstlisting}
+		\NewVariableClass{@\usercommand\<Class\>@}[@\<options\>@]
+	\end{lstlisting}
+	A new object is declared by
+	\begin{lstlisting}
+		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+	\end{lstlisting}
+	The syntax for this object is
+	\begin{lstlisting}
+		@\usercommand\<object\>@[@\<options\>@]{@\<argument\>@}
+	\end{lstlisting}
+	\item \lstinline!Symbol!:
+	A new class is declared with the
+	syntax
+	\begin{lstlisting}
+		\NewSimpleClass@\usercommand\<Class\>@[@\<options\>@]
+	\end{lstlisting}
+	A new object is declared by
+	\begin{lstlisting}
+		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+	\end{lstlisting}
+	The syntax for this object is
+	\begin{lstlisting}
+		@\usercommand\<object\>@[@\<options\>@]
+	\end{lstlisting}
+	\item \lstinline!Simple!:
+	A new class is declared with the
+	syntax
+	\begin{lstlisting}
+		\NewSimpleClass@\usercommand\<Class\>@[@\<options\>@]
+	\end{lstlisting}
+	A new object is declared by
+	\begin{lstlisting}
+		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+	\end{lstlisting}
+	The syntax for this object is
+	\begin{lstlisting}
+		@\usercommand\<object\>@
+	\end{lstlisting}
+\end{itemize}
+
+Let me add that \semantex{} uses a very clear separation between the input syntax and the underlying machinery. Because of this, if the user needs a different kind of class type, it is not very hard to create one. You must simply open the source code of \semantex, find the class you want to modify, and then copy the definition of the command~\mylst!\New$\<Class type\>$Class! and modify it in whatever way you want.
+
+The last class type, called \lstinline!Simple!,
+is the class type of the class~\lstinline!\SemantexBaseObject!. This class is pretty useless as all it does is print its symbol, without allowing any keyval syntax. So you simply should not use it.
+
+There are also a few extra class types which are now deprecated, as their syntax will only cause confusion.
+They are still included for backwards compatibility, but I highly discourage their use:
+
+\begin{itemize}
+	\item \lstinline!Cohomology!:
+	A new class is declared with the
+	syntax
+	\begin{lstlisting}
+		\NewCohomologyClass@\usercommand\<Class\>@[@\<options\>@]
+	\end{lstlisting}
+	A new object is declared by
+	\begin{lstlisting}
+		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+	\end{lstlisting}
+	The syntax for this object is
+	\begin{lstlisting}
+		@\usercommand\<object\>@[@\<options\>@]{@\<degree\>@}{@\<argument\>@}
+	\end{lstlisting}
+	\item \lstinline!Delimiter!:
+	A new class is declared with the syntax
+	\begin{lstlisting}
+		\NewDelimiterClass@\usercommand\<Class\>@[@\<options\>@]
+	\end{lstlisting}
+	A new object is declared by
+	\begin{lstlisting}
+		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<left bracket\>@}{@\<right bracket\>@}[@\<options\>@]
+	\end{lstlisting}
+	The syntax for this object is
+	\begin{lstlisting}
+		@\usercommand\<object\>@[@\<options\>@]{@\<argument\>@}
+	\end{lstlisting}
+\end{itemize}
+
+\section{The predefined data}
+
+By default, the following data are defined for each class or object and are accessible via
+the programming keys and commands:
+
+\begin{itemize}
+	\item
+	\mylst!symbol!
+	(token list):
+	the symbol.
+	\item
+	\mylst!output!
+	(token list):
+	the name of the output class.
+	\item
+	\mylst!output options!
+	(token list):
+	the output options, i.e.~the options to be passed to the output class.
+	\item
+	\mylst!math class!
+	(token list):
+	the \TeX\ math class command that the final output
+	is evnetually wrapped around;
+	the intended use of this is the \TeX\ commands
+	\lstinline!\mathord!, \lstinline!\mathop!, \lstinline!\mathbin!, \lstinline!\mathrel!, \lstinline!\mathopen!, \lstinline!\mathclose!, and~\lstinline!\mathpunct!.
+	\item
+	\lstinline!height phantom!
+	(token list):
+	the height phantom that is used
+	for calculating the height of left indices.
+	\item
+	\lstinline!slanting phantom!
+	(token list):
+	the slanting phantom that is used for
+	calculating the slanting of left indices.
+	\item
+	\lstinline!par size!
+	(token list):
+	the size of the argument parentheses.
+	Here, the value~\lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+	The default value is \lstinline!normal!.
+	\item
+	\lstinline!left par!
+	(token list):
+	the left argument parenthesis;
+	the default value is~\lstinline!(!.
+	\item
+	\lstinline!right par!
+	(token list):
+	the right argument parenthesis;
+	the default value is~\lstinline!)!.
+	\item
+	\lstinline!spar size!
+	(token list):
+	the size of the symbol parentheses (for use with the \lstinline!spar!~routine).
+	Here, the value~\lstinline!normal! means normal size
+	parentheses,
+	\lstinline!auto! and~\lstinline!*!
+	mean auto-scaled parentheses using~\lstinline!\left ...\right!.
+	If another value is received, that value
+	is used for the parenthesis size,
+	so the intended values are~\lstinline!\big!, \lstinline!\Big!,
+	\lstinline!\bigg!,~\lstinline!\Bigg!.
+	The default value is \lstinline!normal!.
+	\item
+	\lstinline!left spar!
+	(token list):
+	the left symbol parenthesis  (for use with the \lstinline!spar!~routine);
+	the default value is~\lstinline!(!.
+	\item
+	\lstinline!right spar!
+	(token list):
+	the right symbol parenthesis  (for use with the \lstinline!spar!~routine);
+	the default value is~\lstinline!)!.
+	\item
+	\lstinline!arg!
+	(token list):
+	the argument.
+	\item
+	\lstinline!pre arg!
+	(token list):
+	to be printed in front of the argument, if the argument is non-empty.
+	\item
+	\lstinline!post arg!
+	(token list):
+	to be printed after the argument, if the argument is non-empty.
+	\item
+	\lstinline!arg sep!
+	(token list):
+	the argument separator;
+	comma by default.
+	\item
+	\lstinline!arg slot!
+	(token list):
+	the argument slot;
+	\lstinline!{-}!~by default.
+	\item
+	\lstinline!arg dots!
+	(token list):
+	the argument dots;
+	\lstinline!\dots!~by default.
+	% Upper index:
+	\item
+	\lstinline!upper!
+	(token list):
+	the upper index.
+	\item
+	\lstinline!pre upper!
+	(token list):
+	the pre-upper index, to be printed in front of the upper index,
+	if the upper index is non-empty.
+	\item
+	\mylst!post upper!
+	(token list)
+	the post-upper index, to be printed after the upper index,
+	if the upper index is non-empty.
+	\item
+	\mylst!upper sep!
+	(token list):
+	the upper index separator;
+	comma by default.
+	\item
+	\mylst!upper dots!
+	(token list):
+	the upper dots; \lstinline!\dots!~by default.
+	\item
+	\mylst!upper slot!
+	(token list):
+	the upper slot; \lstinline!{-}!~by default.
+	% Lower index:
+	\item
+	\lstinline!lower!
+	(token list):
+	the lower index.
+	\item
+	\lstinline!pre lower!
+	(token list):
+	the pre-lower index, to be printed in front of the lower index,
+	if the lower index is non-empty.
+	\item
+	\mylst!post lower!
+	(token list)
+	the post-lower index, to be printed after the lower index,
+	if the lower index is non-empty.
+	\item
+	\mylst!lower sep!
+	(token list):
+	the lower index separator;
+	comma by default.
+	\item
+	\mylst!lower dots!
+	(token list):
+	the lower dots; \lstinline!\dots!~by default.
+	\item
+	\mylst!lower slot!
+	(token list):
+	the lower slot; \lstinline!{-}!~by default.
+	% Upper left index:
+	\item
+	\lstinline!upper left!
+	(token list):
+	the upper left index.
+	\item
+	\lstinline!pre upper left!
+	(token list):
+	the pre-upper left index, to be printed in front of the upper left index,
+	if the upper left index is non-empty.
+	\item
+	\mylst!post upper left!
+	(token list)
+	the post-upper left index, to be printed after the upper left index,
+	if the upper left index is non-empty.
+	\item
+	\mylst!upper left sep!
+	(token list):
+	the upper left index separator;
+	comma by default.
+	\item
+	\mylst!upper left dots!
+	(token list):
+	the upper left dots; \lstinline!\dots!~by default.
+	\item
+	\mylst!upper left slot!
+	(token list):
+	the upper left slot; \lstinline!{-}!~by default.
+	% Lower left index:
+	\item
+	\lstinline!lower left!
+	(token list):
+	the lower left index.
+	\item
+	\lstinline!pre lower left!
+	(token list):
+	the pre-lower left index, to be printed in front of the lower left index,
+	if the lower left index is non-empty.
+	\item
+	\mylst!post lower left!
+	(token list)
+	the post-lower left index, to be printed after the lower left index,
+	if the lower left index is non-empty.
+	\item
+	\mylst!lower left sep!
+	(token list):
+	the lower left index separator;
+	comma by default.
+	\item
+	\mylst!lower left dots!
+	(token list):
+	the lower left dots; \lstinline!\dots!~by default.
+	\item
+	\mylst!lower left slot!
+	(token list):
+	the lower left slot; \lstinline!{-}!~by default.
+	\item
+	\mylst!upper grading!
+	(boolean):
+	whether or not to use
+	upper (cohomological) grading; true by default.
+	\item
+	\mylst!par!
+	(boolean):
+	whether or not to use parentheses; true by default.
+	\item
+	\mylst!flex par!
+	(boolean):
+	if \mylst!par! is set to false, setting \mylst!flex par! to true
+	will still print a pair of parentheses when there is more than one argument;
+	false by default.
+	\item
+	\mylst!left argument!
+	(boolean):
+	if true, the argument (and parentheses)
+	will be printed to the \emph{left} of the symbol;
+	false by default.
+	\item
+	\mylst!next arg with sep!
+	(boolean):
+	if true, the next argument will have a separator printed in front of it.
+	\item
+	\mylst!next upper with sep!
+	(boolean):
+	If true, the next upper index will have a separator printed in front of it.
+	\item
+	\mylst!next lower with sep!
+	(boolean):
+	If true, the next lower index will have a separator printed in front of it.
+	\item
+	\mylst!next upper left with sep!
+	(boolean):
+	If true, the next upper left index will have a separator printed in front of it.
+	\item
+	\mylst!next lower left with sep!
+	(boolean):
+	If true, the next lower upper index will have a separator printed in front of it.
+	\item
+	\mylst!number of arguments!
+	(integer):
+	the number of arguments.
+	\item
+	\mylst!number of upper indices!
+	(integer):
+	the number of upper indices.
+	\item
+	\mylst!number of lower indices!
+	(integer):
+	the number of lower indices.
+	\item
+	\mylst!number of upper left indices!
+	(integer):
+	the number of upper left indices.
+	\item
+	\mylst!number of lower left indices!
+	(integer):
+	the number of lower left indices.
+\end{itemize}
+
+\end{document}
