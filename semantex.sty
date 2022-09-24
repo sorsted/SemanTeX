@@ -1,5 +1,5 @@
 \RequirePackage{xparse,l3keys2e,leftindex,semtex}
-\ProvidesExplPackage{semantex}{2022/06/22}{0.520}{}
+\ProvidesExplPackage{semantex}{2022/06/24}{0.521}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %															%
@@ -10,7 +10,7 @@
 %															%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\tl_set:Nn\SemantexVersion{0.520}
+\tl_set:Nn\SemantexVersion{0.521}
 
 \cs_set_eq:NN \semantex_keyval_parse:NNn \keyval_parse:NNn
 \cs_set:Npn \semantex_singlekey_parse:Nn#1#2 { \clist_map_function:nN { #2 } #1 }
@@ -148,7 +148,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\cs_new_protected:Npn\semantex_declare_simple_class:N#1 % new simple-type class
+\cs_new_protected:Npn\semantex_define_simple_class:N#1 % new simple-type class
 {
 	% #1 = class name
 	\DeclareDocumentCommand{#1}{m}
@@ -167,49 +167,84 @@
 			##1
 		}
 	}
-	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	\cs_set_protected:cpn { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
 	{
-		% the command for creating a new object of class #1
-		% ##1 = command name, with backslash
-		% ##2 = symbol
-		% ##3 = options
-		\IfValueTF{##2}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_symbol:Nn ##1 { ##2 }
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
 		% create the object with name ##1
 		\DeclareDocumentCommand{##1}{}
 		{
-		% the actual \##1 command
 			\semantex_write_original_source_to_semtex_file:n { ##1 }
 			\semantex_render_object:Nn ##1 { }
 		}
 	}
-}
-
-\NewDocumentCommand\DeclareSimpleClass{ m O{} }
-{
-	\semantex_declare_class:Nn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
-	\semantex_declare_simple_class:N #1
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_new_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% declare object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_new_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_new_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% new object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
 }
 
 \NewDocumentCommand\NewSimpleClass { m O{} }
 {
 	\semantex_new_class_and_do:NNnn #1 \DeclareSimpleClass { \semantex_class_set_keys:Nn #1 { #2 } }
 	{
-		\semantex_declare_simple_class:N #1
+		\semantex_define_simple_class:N #1
 	}
 }
 
-\cs_new_protected:Npn\semantex_declare_symbol_class:N #1 % new symbol-type class
+\NewDocumentCommand\DeclareSimpleClass{ m O{} }
+{
+	\semantex_declare_class_and_do:Nnn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
+	{
+		\semantex_define_simple_class:N #1
+	}
+}
+
+\cs_new_protected:Npn\semantex_define_symbol_class:N #1 % new symbol-type class
 {
 	% #1 = class name
 	\DeclareDocumentCommand{#1}{mo}
@@ -251,28 +286,11 @@
 			}
 		}
 	}
-	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	\cs_set_protected:cpn { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
 	{
-		% the command for creating a new object of class #1
-		% ##1 = command name, with backslash
-		% ##2 = symbol
-		% ##3 = options
-		\IfValueTF{##2}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_symbol:Nn ##1 { ##2 }
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
 		% create the object with name ##1
 		\DeclareDocumentCommand{##1}{o}
 		{
-		% the actual \##1 command
 			\IfValueTF { ####1 }
 			{
 				\semantex_write_original_source_to_semtex_file:n { ##1 [ ####1 ] }
@@ -287,23 +305,75 @@
 			}
 		}
 	}
-}
-
-\NewDocumentCommand\DeclareSymbolClass{ m O{} }
-{
-	\semantex_declare_class:Nn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
-	\semantex_declare_symbol_class:N #1
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_new_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% new object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_new_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_new_object:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% declare object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_declare_object:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
 }
 
 \NewDocumentCommand\NewSymbolClass { m O{} }
 {
 	\semantex_new_class_and_do:NNnn #1 \DeclareSymbolClass { \semantex_class_set_keys:Nn #1 { #2 } }
 	{
-		\semantex_declare_symbol_class:N #1
+		\semantex_define_symbol_class:N #1
 	}
 }
 
-\cs_new_protected:Npn\semantex_declare_variable_class:N#1 % new variable-type class
+\NewDocumentCommand\DeclareSymbolClass{ m O{} }
+{
+	\semantex_declare_class_and_do:Nnn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
+	{
+		\semantex_define_symbol_class:N #1
+	}
+}
+
+\cs_new_protected:Npn\semantex_define_variable_class:N#1 % new variable-type class
 {
 	% #1 = class name
 	\DeclareDocumentCommand{#1}{mog}
@@ -392,27 +462,11 @@
 			}
 		}
 	}
-	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	\cs_set_protected:cpn { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
 	{
-		% the command for creating a new object of class #1
-		% ##1 = command name, with backslash
-		% ##2 = symbol
-		% ##3 = options
-		\IfValueTF{##2}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_symbol:Nn ##1 { ##2 }
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
-		{
-			\semantex_declare_object:NNn #1 ##1 {
-				\semantex_object_set_keys:Nn ##1 { ##3 }
-			}
-		}
 		% creates the object with name ##1
-		\DeclareDocumentCommand{##1}{og}{
-		% the actual \##1 command
+		\DeclareDocumentCommand{##1}{og}
+		{
 			\IfValueTF{####1}{
 				\IfValueTF{####2}
 				{
@@ -459,19 +513,71 @@
 			}
 		}
 	}
-}
-
-\NewDocumentCommand\DeclareVariableClass{ m O{} }
-{
-	\semantex_declare_class:Nn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
-	\semantex_declare_variable_class:N #1
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_new_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% new object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_new_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_new_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
+	\exp_args:Nc\DeclareDocumentCommand{__semantex_declare_object_of_\semantex_class_to_register:N #1:Nw}{mgO{}}
+	{
+		% declare object of class #1
+		% ##1 = object name
+		% ##2 = symbol
+		% ##3 = options
+		\IfValueTF{##2}
+		{
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_symbol:Nn ##1 { ##2 }
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+		{
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
+				\semantex_object_set_keys:Nn ##1 { ##3 }
+			}
+			{
+				\use:c { __semantex_define_object_of_\semantex_class_to_register:N #1:N } ##1
+			}
+		}
+	}
 }
 
 \NewDocumentCommand\NewVariableClass { m O{} }
 {
 	\semantex_new_class_and_do:NNnn #1 \DeclareVariableClass { \semantex_class_set_keys:Nn #1 { #2 } }
 	{
-		\semantex_declare_variable_class:N #1
+		\semantex_define_variable_class:N #1
+	}
+}
+
+\NewDocumentCommand\DeclareVariableClass{ m O{} }
+{
+	\semantex_declare_class_and_do:Nnn { #1 } { \semantex_class_set_keys:Nn #1 { #2 } }
+	{
+		\semantex_define_variable_class:N #1
 	}
 }
 
@@ -511,31 +617,36 @@
 
 \tl_set:Nx \g_semantex_class_SemantexBaseObject_register_tl { \semantex_class_to_register:N \SemantexBaseObject }
 
+\DeclareDocumentCommand\NewObject { m m }
+{
+	% #1 = name of class
+	% #2 = name of object
+	\semantex_class_if_exist:NTF #1
+	{
+		\use:c { __semantex_new_object_of_\semantex_class_to_register:N #1:Nw } #2
+	}
+	{
+		\msg_error:nnxx { semantex } { created_object_of_unknown_class } { \token_to_str:N #1 } { \token_to_str:N #2 }
+	}
+}
+
 \DeclareDocumentCommand\DeclareObject { m m }
 {
-	% #1 = name of object
+	% #1 = name of class
+	% #2 = name of object
 	\semantex_class_if_exist:NTF #1
 	{
 		\use:c { __semantex_declare_object_of_\semantex_class_to_register:N #1:Nw } #2
 	}
 	{
-		\msg_error:nnn { semantex } { created_object_of_unknown_class } { #1 }
-	}
-}
-
-\DeclareDocumentCommand\NewObject { m m }
-{
-	\cs_if_exist:NTF #2
-	{
-		\msg_error:nnn { semantex } { created_object_with_already_defined_name } { #2 }
-	}
-	{
-		\DeclareObject #1 #2
+		\msg_error:nnxx { semantex } { created_object_of_unknown_class } { \token_to_str:N #1 } { \token_to_str:N #2 }
 	}
 }
 
 \DeclareDocumentCommand\UseClassInCommand { mo }
 {
+	% #1 = name of class
+	% #2 = options to pass to class
 	\semantex_class_if_exist:NTF #1
 	{
 		\IfValueTF { #2 }
@@ -550,7 +661,7 @@
 		}
 	}
 	{
-		\msg_error:nnn { semantex } { used_unknown_class } { #1 }
+		\msg_error:nnx { semantex } { used_unknown_class } { \token_to_str:N #1 }
 	}
 }
 
@@ -595,24 +706,6 @@
 
 \cs_generate_variant:Nn \semantex_new_register:nn { xn }
 
-\cs_new_protected:Npn \semantex_declare_class:Nn#1#2
-{
-	% create a new class
-	% #1 = name of class
-	% #2 = standard keyval setup
-	\semantex_class_if_exist:NTF #1
-	{
-		\msg_error:nnn { semantex } { class_already_defined } { #1 }
-	}
-	{
-		\semantex_add_to_list_of_classes:N #1
-		\semantex_new_register:xn { \semantex_class_to_register:N #1 } { #2 }
-		\semantex_new_register:xn { \semantex_class_to_associated_object_register:N #1 } {
-			\semantex_object_associated_to_class_set_class:Nn #1 { #1 }
-		}
-	}
-}
-
 \cs_new_protected:Npn \semantex_new_class_and_do:NNnn#1#2#3#4
 {
 	% create a new class
@@ -622,23 +715,59 @@
 	% #4 = code to execute if successful
 	\cs_if_exist:NTF #1
 	{
-		\msg_error:nnnn { semantex } { created_class_with_already_defined_name } { #1 } { #2 }
+		\msg_error:nnxx { semantex } { created_class_with_already_defined_name } { \token_to_str:N #1 } { \token_to_str:N #2 }
 	}
 	{
-		\semantex_declare_class:Nn #1 { #3 }
-		#4
+		\semantex_declare_class_and_do:Nnn #1 { #3 } { #4 }
 	}
 }
 
-\cs_set_protected:Npn \semantex_declare_object:NNn#1#2#3
+\cs_new_protected:Npn \semantex_declare_class_and_do:Nnn#1#2#3
+{
+	% create a new class
+	% #1 = name of class
+	% #2 = standard keyval setup
+	% #3 = code to execute if succesful
+	\semantex_class_if_exist:NTF #1
+	{
+		\msg_error:nnx { semantex } { class_already_defined } { \token_to_str:N #1 }
+	}
+	{
+		\semantex_add_to_list_of_classes:N #1
+		\semantex_new_register:xn { \semantex_class_to_register:N #1 } { #2 }
+		\semantex_new_register:xn { \semantex_class_to_associated_object_register:N #1 } {
+			\semantex_object_associated_to_class_set_class:Nn #1 { #1 }
+		}
+		#3
+	}
+}
+
+\cs_set_protected:Npn \semantex_new_object_and_do:NNnn#1#2#3#4
 {
 	% create a new object
 	% #1 = name of class
 	% #2 = name of object
 	% #3 = standard keyval setup
+	% #4 = code to execute if successful
+	\cs_if_exist:NTF #2
+	{
+		\msg_error:nnx { semantex } { created_object_with_already_defined_name } { \token_to_str:N #2 }
+	}
+	{
+		\semantex_declare_object_and_do:NNnn #1 #2 { #3 } { #4 }
+	}
+}
+
+\cs_set_protected:Npn \semantex_declare_object_and_do:NNnn#1#2#3#4
+{
+	% create a new object
+	% #1 = name of class
+	% #2 = name of object
+	% #3 = standard keyval setup
+	% #4 = code to execute if successful
 	\semantex_object_if_exist:NTF #2
 	{
-		\msg_error:nnn { semantex } { object_already_defined } { #2 }
+		\msg_error:nnx { semantex } { object_already_defined } { \token_to_str:N #2 }
 	}
 	{
 		\semantex_add_to_list_of_objects:N #2
@@ -647,6 +776,7 @@
 			\semantex_object_set_class:Nn #2 { #1 }
 			#3
 		}
+		#4
 	}
 }
 
@@ -1623,7 +1753,7 @@
 		\tl_set:cx { g__semantex_data_tl_#1_parent } { \semantex_class_to_register:N #2 }
 	}
 	{
-		\semantex_msg_error:nnnn { #1 } { class_not_found } { parent } { #2 }
+		\semantex_msg_error:nnnx { #1 } { class_not_found } { parent } { \token_to_str:N #2 }
 	}
 }
 
@@ -1636,7 +1766,7 @@
 		\tl_set:cx { g__semantex_data_tl_#1_parent } { \semantex_class_to_register:N #2 }
 	}
 	{
-		\semantex_msg_error:nnnn { #1 } { class_not_found } { class } { #2 }
+		\semantex_msg_error:nnnx { #1 } { class_not_found } { class } { \token_to_str:N #2 }
 	}
 }
 
@@ -1649,7 +1779,7 @@
 		\tl_set:cx { g__semantex_data_tl_#1_parent } { \semantex_object_to_register:N #2 }
 	}
 	{
-		\semantex_msg_error:nnnn { #1 } { object_not_found } { copy } { #2 }
+		\semantex_msg_error:nnnx { #1 } { object_not_found } { copy } { \token_to_str:N #2 }
 	}
 }
 
@@ -6004,7 +6134,7 @@
 		\semantex_data_tl_set:nnx { #1 } { output } { \semantex_class_to_register:N #2 }
 	}
 	{
-		\semantex_msg_error:nnnn { #1 } { class_not_found } { output } { #2 }
+		\semantex_msg_error:nnnx { #1 } { class_not_found } { output } { \token_to_str:N #2 }
 	}
 }
 
@@ -6273,11 +6403,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\msg_new:nnnn { semantex } { semantex_setup_key_not_found } { Unknown~key~#1~passed~to~\token_to_str:N\SemantexSetup~on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { semantex_setup_key_not_found } { Unknown~key~#1~passed~to~\token_to_str:N\SemantexSetup\ on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { semantex_setup_key_value_not_found } {  Unknown~value~#2~passed~to~key~#1~in~\token_to_str:N\SemantexSetup~on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { semantex_setup_key_value_not_found } { Unknown~value~#2~passed~to~key~#1~in~\token_to_str:N\SemantexSetup\ on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { valuekey_not_found } {  Unknown~key~#2~passed~to~#1~on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { valuekey_not_found } { Unknown~key~#2~passed~to~#1~on~line~\msg_line_number: } {}
 
 \msg_new:nnnn { semantex } { arg_valuekey_not_found } { Unknown~argument~key~#2~passed~to~#1~on~line~\msg_line_number: } {}
 
@@ -6303,21 +6433,21 @@
 
 \msg_new:nnnn { semantex } { object_not_found } { You~set~#1~as~#2~of~unknown~object~#3~on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { created_object_of_unknown_class } { Unknown~class~#1~declared~as~class~of~#2~on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { created_object_of_unknown_class } { Unknown~class~#1~declared~as~class~of~object~#2~on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { created_object_with_already_defined_name } { Command~#1~already~defined;~you~can~use~\token_to_str:N\DeclareObject~to~override~existing~commands. } {}
+\msg_new:nnnn { semantex } { created_object_with_already_defined_name } { Command~#1~already~defined;~you~can~use~\token_to_str:N\DeclareObject\ to~override~existing~commands. } {}
 
-\msg_new:nnnn { semantex } { created_class_with_already_defined_name } { Command~#1~already~defined;~you~can~use~\token_to_str:N #2~to~override~existing~commands. } {}
+\msg_new:nnnn { semantex } { created_class_with_already_defined_name } { Command~#1~already~defined;~you~can~use~#2~to~override~existing~commands. } {}
 
-\msg_new:nnnn { semantex } { used_unknown_class } { Unknown~class~#1~received~by~\token_to_str:N\UseClassInCommand~on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { used_unknown_class } { Unknown~class~#1~received~by~\token_to_str:N\UseClassInCommand\ on~line~\msg_line_number: } {}
 
 \msg_new:nnnn { semantex } { setup_unknown_class } { You~tried~setting~up~an~unknown~#1~on~line~\msg_line_number: } {}
 
 \msg_new:nnnn { semantex } { setup_unknown_object } { You~tried~setting~up~an~unknown~#1~on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { created_a_SemantexBaseObject } { Never~create~objects~of~class~\token_to_str:N\SemantexBaseObject;~create~a~new~class~yourself~instead.~You~created~the~object~#1 on~line~\msg_line_number: } {}
+\msg_new:nnnn { semantex } { created_a_SemantexBaseObject } { Never~create~objects~of~class~\token_to_str:N\SemantexBaseObject;~create~a~new~class~yourself~instead.~You~created~the~object~#1~on~line~\msg_line_number: } {}
 
-\msg_new:nnnn { semantex } { SemantexThis_in_input_stream } { The~command~\token_to_str:N\SemantexThis~was~found~outside~a~class~or~object~on~line~\msg_line_number:;~did~you~forget~to~use~set~keys~x={...}? } {}
+\msg_new:nnnn { semantex } { SemantexThis_in_input_stream } { The~command~\token_to_str:N\SemantexThis\ was~found~outside~a~class~or~object~on~line~\msg_line_number:;~did~you~forget~to~use~set~keys~x={...}? } {}
 
 \msg_new:nnnn { semantex } { generic_error } { #2~#1~on~line~\msg_line_number: } {}
 
@@ -6352,6 +6482,8 @@
 	}
 }
 
+\cs_generate_variant:Nn \semantex_msg_error:nn { xn }
+
 \cs_new_protected:Npn \semantex_msg_error:nnn#1#2#3
 {
 	\semantex_error_output_format:xN { #1 } \l__semantex_msg_error_nnnn_temp_tl
@@ -6361,7 +6493,7 @@
 	} { #3 }
 }
 
-\cs_generate_variant:Nn \semantex_msg_error:nnn { nnx }
+\cs_generate_variant:Nn \semantex_msg_error:nnn { nnx, xnx }
 
 \cs_new_protected:Npn \semantex_msg_error:nnnn#1#2#3#4
 {
@@ -6371,6 +6503,8 @@
 		\l__semantex_msg_error_nnnnn_temp_tl
 	} { #3 } { #4 }
 }
+
+\cs_generate_variant:Nn \semantex_msg_error:nnnn { xnxx, xnnx, nnnx , nnxx }
 
 \cs_new_protected:Npn\semantex_error_key_value_not_found:nnn#1#2#3
 {
@@ -8683,12 +8817,19 @@
 
 \cs_set_eq:cc { __semantex_old_version_of_semantex_declare_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } { __semantex_declare_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw }
 
-\cs_set_protected:Npn \__semantex_declare_object_of_class_SemantexBaseObject:Nw#1
+\cs_set_protected:cpn { __semantex_declare_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } #1
 {
-	\msg_error:nnn { semantex } { created_a_SemantexBaseObject } { #1 }
+	\msg_error:nnx { semantex } { created_a_SemantexBaseObject } { \token_to_str:N #1 }
 	\use:c { __semantex_old_version_of_semantex_declare_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } #1
 }
 
+\cs_set_eq:cc { __semantex_old_version_of_semantex_new_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } { __semantex_new_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw }
+
+\cs_set_protected:cpn { __semantex_new_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } #1
+{
+	\msg_error:nnx { semantex } { created_a_SemantexBaseObject } { \token_to_str:N #1 }
+	\use:c { __semantex_old_version_of_semantex_new_object_of_\g_semantex_class_SemantexBaseObject_register_tl :Nw } #1
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %

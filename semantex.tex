@@ -5749,19 +5749,35 @@ In other words, it determines which arguments an object of that class
 can take. The syntax for creating new objects
 also varies.
 
+Each class has a \lstinline!\New...! as well as a \lstinline!\Declare...! variant, the difference being
+that the \lstinline!\New...! variant raises an error if the command name is already taken.
+Both variants will raise an error if a \semantex{} class with the same name already exists.
+Allowing you to override existing \semantex{} definitions would require fundamental changes
+to the system which would slow it down significantly.
+
+Similarly, you can use both of the commands \lstinline!\NewObject! and \lstinline!\DeclareObject!
+to define objects, the difference being that \lstinline!\NewObject! raises an error
+if the command name is already taken.
+Both commands will raise an error if a \semantex{} object with the same name already exists.
+Allowing you to override existing \semantex{} definitions would require fundamental changes
+to the system which would slow it down significantly.
+
+
 The current implementation has the following
 class types:
 
 \begin{itemize}
 	\item \lstinline!Variable!:
-	A new class is declared with the
+	A new class is defined with the
 	syntax
 	\begin{lstlisting}
 		\NewVariableClass{@\usercommand\<Class\>@}[@\<options\>@]
+		\DeclareVariableClass{@\usercommand\<Class\>@}[@\<options\>@]
 	\end{lstlisting}
 	A new object is declared by
 	\begin{lstlisting}
 		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+		\DeclareObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
 	\end{lstlisting}
 	The syntax for this object is
 	\begin{lstlisting}
@@ -5771,11 +5787,13 @@ class types:
 	A new class is declared with the
 	syntax
 	\begin{lstlisting}
-		\NewSimpleClass@\usercommand\<Class\>@[@\<options\>@]
+		\NewSymbolClass@\usercommand\<Class\>@[@\<options\>@]
+		\DeclareSymbolClass@\usercommand\<Class\>@[@\<options\>@]
 	\end{lstlisting}
 	A new object is declared by
 	\begin{lstlisting}
 		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+		\DeclareObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
 	\end{lstlisting}
 	The syntax for this object is
 	\begin{lstlisting}
@@ -5786,10 +5804,12 @@ class types:
 	syntax
 	\begin{lstlisting}
 		\NewSimpleClass@\usercommand\<Class\>@[@\<options\>@]
+		\DeclareSimpleClass@\usercommand\<Class\>@[@\<options\>@]
 	\end{lstlisting}
 	A new object is declared by
 	\begin{lstlisting}
 		\NewObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
+		\DeclareObject@\usercommand\<Class\>@@\usercommand\<object\>@{@\<symbol\>@}[@\<options\>@]
 	\end{lstlisting}
 	The syntax for this object is
 	\begin{lstlisting}

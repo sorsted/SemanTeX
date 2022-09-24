@@ -25,7 +25,7 @@ Released under the LaTeX Project Public License v1.3c or later
 See http://www.latex-project.org/lppl.txt
 ----------------------------------------------------------------
 
-Copyright (C) 2021 by Sebastian Ørsted <sorsted@gmail.com>
+Copyright (C) 2022 by Sebastian Ørsted <sorsted@gmail.com>
 
 The package is loaded via \usepackage{semantex}
 
