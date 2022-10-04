@@ -2135,9 +2135,9 @@ $\int \vf \wedgeD{\vx[1],
 \chapter{Using \texorpdfstring{Seman\!\TeX{}}{SemanTeX} in other commands using \texorpdfstring{\texttt{\textbackslash UseClassInCommand}}{\string\UseClassInCommand}}\label{sec:UseClassInCommand}
 
 \SemantexRecordObject{\Frac}
-\newcommand\Frac[2]{
-	\SemantexRecordSource{\Frac{#1}{#2}}
-	\UseClassInCommand\MyVar{ \frac{#1}{#2} }
+\newcommand\Frac[2]{%
+	\SemantexRecordSource{\Frac{#1}{#2}}%
+	\UseClassInCommand\MyVar{\frac{#1}{#2}}%
 }
 
 Sometimes, it is useful to create other commands based on \semantex
@@ -2148,7 +2148,9 @@ a command~\lstinline!\Frac! which automatically wraps
 the fraction in~\lstinline!\MyVar!. The first guess how to
 do that would be something like
 \begin{lstlisting}
-\newcommand\Frac[2]{ \MyVar{ \frac{#1}{#2} } }
+\newcommand\Frac[2]{%
+	\MyVar{\frac{#1}{#2}}%
+}
 \end{lstlisting}
 \begin{LTXexample}
 \[
@@ -2162,9 +2164,9 @@ your document of \semantex{} markup. But in order to prepare yourself for this p
 in a slightly more cumbersome way:
 \begin{lstlisting}
 \SemantexRecordObject{\Frac}
-\newcommand\Frac[2]{
-	\SemantexRecordSource{\Frac{#1}{#2}}
-	\UseClassInCommand\MyVar{ \frac{#1}{#2} }
+\newcommand\Frac[2]{%
+	\SemantexRecordSource{\Frac{#1}{#2}}%
+	\UseClassInCommand\MyVar{\frac{#1}{#2}}%
 }
 \end{lstlisting}
 \begin{LTXexample}
@@ -2240,27 +2242,27 @@ Therefore, we do three things:
 \NewObject\MyVar\catvect{\categoryformat{Vect}}
 
 \SemantexRecordObject{\catxmod}
-\newcommand\catxmod[1]{
-	\SemantexRecordSource{\catxmod{#1}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}
+\newcommand\catxmod[1]{%
+	\SemantexRecordSource{\catxmod{#1}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}%
 }
 
 \SemantexRecordObject{\catmodx}
-\newcommand\catmodx[1]{
-	\SemantexRecordSource{\catmodx{#1}}
-	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}
+\newcommand\catmodx[1]{%
+	\SemantexRecordSource{\catmodx{#1}}%
+	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}%
 }
 
 \SemantexRecordObject{\catxmody}
-\newcommand\catxmody[2]{
-	\SemantexRecordSource{\catxmody{#1}{#2}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}
+\newcommand\catxmody[2]{%
+	\SemantexRecordSource{\catxmody{#1}{#2}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}%
 }
 
 \SemantexRecordObject{\catxmodx}
-\newcommand\catxmodx[1]{
-	\SemantexRecordSource{\catxmodx{#1}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}
+\newcommand\catxmodx[1]{%
+	\SemantexRecordSource{\catxmodx{#1}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}%
 }
 
 The above method can be used to create commands
@@ -2293,9 +2295,9 @@ For this, we use the constructions we learned at the introduction
 to this chapter:
 \begin{lstlisting}
 \SemantexRecordObject{\catxmod}
-\newcommand\catxmod[1]{
-	\SemantexRecordSource{\catxmod{#1}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}
+\newcommand\catxmod[1]{%
+	\SemantexRecordSource{\catxmod{#1}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod}}%
 }
 \end{lstlisting}
 \begin{LTXexample}
@@ -2310,21 +2312,21 @@ of other situations, like
 \( \catmodx{\vR} \) or~\( \catxmody{\vR}{\vS} \):
 \begin{lstlisting}
 \SemantexRecordObject{\catmodx}
-\newcommand\catmodx[1]{
-	\SemantexRecordSource{\catmodx{#1}}
-	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}
+\newcommand\catmodx[1]{%
+	\SemantexRecordSource{\catmodx{#1}}%
+	\UseClassInCommand\MyVar{\categoryformat{mod-}#1}%
 }
 
 \SemantexRecordObject{\catxmody}
-\newcommand\catxmody[2]{
-	\SemantexRecordSource{\catxmody{#1}{#2}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}
+\newcommand\catxmody[2]{%
+	\SemantexRecordSource{\catxmody{#1}{#2}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#2}%
 }
 
 \SemantexRecordObject{\catxmodx}
-\newcommand\catxmodx[1]{
-	\SemantexRecordSource{\catxmodx{#1}}
-	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}
+\newcommand\catxmodx[1]{%
+	\SemantexRecordSource{\catxmodx{#1}}%
+	\UseClassInCommand\MyVar{#1\categoryformat{-mod-}#1}%
 }
 \end{lstlisting}
 

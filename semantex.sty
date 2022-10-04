@@ -1,5 +1,5 @@
 \RequirePackage{xparse,l3keys2e,leftindex,semtex}
-\ProvidesExplPackage{semantex}{2022/09/24}{0.521}{}
+\ProvidesExplPackage{semantex}{2022/10/04}{0.522}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %															%
@@ -10,7 +10,7 @@
 %															%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\tl_set:Nn\SemantexVersion{0.521}
+\tl_set:Nn\SemantexVersion{0.522}
 
 \cs_set_eq:NN \semantex_keyval_parse:NNn \keyval_parse:NNn
 \cs_set:Npn \semantex_singlekey_parse:Nn#1#2 { \clist_map_function:nN { #2 } #1 }
@@ -887,7 +887,7 @@
 		{
 			\semantex_inner_pre_return:n { #1 }
 			\tl_set:Nx \l__semantex_render_output_class_temp_tl { \semantex_data_tl_get:nn { #1 } { output } } % The output class
-			\tl_set:Nx \l__semantex_render_object_associated_to_output_class_tempt_tl {
+			\tl_set:Nx \l__semantex_render_object_associated_to_output_class_temp_tl {
 				object_associated_to_\l__semantex_render_output_class_temp_tl
 			}
 			\exp_args:NNx\cs_set:Nn\l__semantex_render_output_options_temp_cs:n
@@ -899,7 +899,7 @@
 			}
 			\tl_put_right:Nx \l__semantex_render_output_options_temp_tl
 			{
-				{ \l__semantex_render_output_class_temp_tl }
+				{ \l__semantex_render_object_associated_to_output_class_temp_tl }
 			}
 			\exp_args:NNo\tl_set:No \l__semantex_render_output_options_temp_tl
 			{
@@ -922,21 +922,21 @@
 						% makes a one-time object of class ??? and allows us to
 						% immediately pass options to it
 						{
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ upper~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { upper } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ lower~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { lower } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ pre~upper~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~upper } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ post~upper~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~upper } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ pre~lower~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~lower } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ post~lower~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~lower } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ slanting~phantom } { } % reset slanting phantom
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ math~class } { \semantex_data_tl_get_exp_not:nn { #1 } { math~class } }
 							\exp_not:V \l__semantex_render_output_options_temp_tl
 							% These are the options we pass to the output class so that it
@@ -959,23 +959,23 @@
 						% makes a one-time object of class ??? and allows us to
 						% immediately pass options to it
 						{
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ upper~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { upper~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ lower~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { lower~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ pre~upper~left~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~upper~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ post~upper~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~upper~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ pre~lower~left~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~lower~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ post~lower~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~lower~left } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ height~phantom } { \semantex_data_tl_get_exp_not:nn { #1 } { height~phantom } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ slanting~phantom } { \semantex_data_tl_get_exp_not:nn { #1 } { slanting~phantom } }
-							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+							\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 								{ math~class } { \semantex_data_tl_get_exp_not:nn { #1 } { math~class } }
 							\exp_not:V \l__semantex_render_output_options_temp_tl
 							% These are the options we pass to the output class so that it
@@ -997,35 +997,35 @@
 					% makes a one-time object of class ??? and allows us to
 					% immediately pass options to it
 					{
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ upper~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { upper } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ lower~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { lower } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ upper~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { upper~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ lower~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { lower~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ pre~upper~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~upper } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ post~upper~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~upper } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ pre~lower~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~lower } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ post~lower~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~lower } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ pre~upper~left~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~upper~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ post~upper~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~upper~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ pre~lower~left~put~left } { \semantex_data_tl_get_exp_not:nn { #1 } { pre~lower~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ post~lower~left~put~right } { \semantex_data_tl_get_exp_not:nn { #1 } { post~lower~left } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ height~phantom } { \semantex_data_tl_get_exp_not:nn { #1 } { height~phantom } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ slanting~phantom } { \semantex_data_tl_get_exp_not:nn { #1 } { slanting~phantom } }
-						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_tempt_tl }
+						\exp_not:N\semantex_base_object_valuekey:nnn { \l__semantex_render_object_associated_to_output_class_temp_tl }
 							{ math~class } { \semantex_data_tl_get_exp_not:nn { #1 } { math~class } }
 						\exp_not:V \l__semantex_render_output_options_temp_tl
 						% These are the options we pass to the output class so that it
