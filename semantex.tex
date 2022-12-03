@@ -1952,7 +1952,7 @@ on \( \vn \)~elements.
 ]
 \NewObject\MyVar\inner[left par=\langle, right par=\rangle]
 
-In this chapter, se show how to define delimiter commands like \( \norm{slot} \) and~\( \inner{slot,slot} \).
+In this chapter, se show how to define delimiter commands like \( \norm{---} \) and~\( \inner{---,---} \).
 This is easy to do via the keys \lstinline!left par! and~\lstinline!right par!:
 \begin{lstlisting}
 \NewObject\MyVar\norm[left par=\lVert, right par=\rVert]
@@ -1962,10 +1962,10 @@ Indeed:
 \begin{LTXexample}
 $\norm{\va}$,
 $\inner{\va,\vb}$,
-$\inner{slot,slot}$
+$\inner{---,---}$
 \end{LTXexample}
 In the case where you want to use different kinds of
-norms, say \( \norm[2]{slot} \) or~\( \norm[\infty]{slot} \),
+norms, say \( \norm[2]{---} \) or~\( \norm[\infty]{---} \),
 you can use the key~\mylst!output options={$\<options\>$}!.
 This allows you to pass the~\<options\> to the output class
 (in this case,~\lstinline!\MyVar!):
@@ -3706,12 +3706,12 @@ In the following sections, we include the full list.
 	Adds a double bullet to the \lstinline!d!-index.
 	
 	\item
-	\mylst!slot!
+	\mylst!---!, \mylst!slot!
 	
 	Adds a slot to the \lstinline!i!-index.
 	
 	\item
-	\mylst!dots!, \mylst!...!
+	\mylst!...!, \mylst!dots!
 	
 	Adds three dots to the \lstinline!i!-index.
 	
@@ -4034,33 +4034,35 @@ In the following sections, we include the full list.
 	argument by the \<separator\>.
 
 	\item
+	\mylst!arg --- with other sep={$\<separator\>$}!,
 	\mylst!arg slot with other sep={$\<separator\>$}!
 	
 	Adds a slot to the argument, separated from any previous
 	argument by the \<separator\>.
 
 	\item
-	\mylst!arg dots!, \mylst!arg ...!
+	\mylst!arg ...!, \mylst!arg dots!
 	
 	Adds three dots to the argument,
 	separated from any previous arguments
 	by the standard separator.
 
 	\item
-	\mylst!comma arg dots!, \mylst!comma arg ...!
+	\mylst!comma arg ...!, \mylst!comma arg dots!
 	
 	Adds three dots to the argument,
 	separated from any previous arguments
 	by a comma.
 
 	\item
-	\mylst!arg slot!
+	\mylst!arg ---!, \mylst!arg slot!
 	
 	Adds a slot to the argument,
 	separated from any previous arguments
 	by the standard separator.
 
 	\item
+	\mylst!comma arg ---!,
 	\mylst!comma arg slot!
 	
 	Adds a slot to the argument,
@@ -4156,12 +4158,14 @@ In the following sections, we include the full list.
 	any prevous upper index by~\<separator\>.
 	
 	\item
+	\mylst!upper ---!,
 	\mylst!upper slot!
 	
 	Adds a slot to the upper index,
 	with no separator from any previous upper index.
 	
 	\item
+	\mylst!sep upper ---!,
 	\mylst!sep upper slot!
 	
 	Adds a slot to the upper index,
@@ -4169,6 +4173,7 @@ In the following sections, we include the full list.
 	index by the default separator.
 
 	\item
+	\mylst!comma upper ---!,
 	\mylst!comma upper slot!
 	
 	Adds a slot to the upper index,
@@ -4182,6 +4187,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!upper --- with other sep={$\<separator\>$}!,\\
 	\mylst!upper slot with other sep={$\<separator\>$}!
 	
 	
@@ -4364,20 +4370,20 @@ In the following sections, we include the full list.
 	any prevous lower index by~\<separator\>.
 	
 	\item
-	\mylst!lower slot!
+	\mylst!lower ---!, \mylst!lower slot!
 	
 	Adds a slot to the lower index,
 	with no separator from any previous lower index.
 	
 	\item
-	\mylst!sep lower slot!
+	\mylst!sep lower ---!, \mylst!sep lower slot!
 	
 	Adds a slot to the lower index,
 	separated from any previous lower
 	index by the default separator.
 
 	\item
-	\mylst!comma lower slot!
+	\mylst!comma lower ---!, \mylst!comma lower slot!
 	
 	Adds a slot to the lower index,
 	separated from any previous lower
@@ -4390,6 +4396,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!lower --- with other sep={$\<separator\>$}!,\\
 	\mylst!lower slot with other sep={$\<separator\>$}!
 	
 	
@@ -4572,20 +4579,20 @@ In the following sections, we include the full list.
 	any prevous upper left index by~\<separator\>.
 	
 	\item
-	\mylst!upper left slot!
+	\mylst!upper left ---!, \mylst!upper left slot!
 	
 	Adds a slot to the upper left index,
 	with no separator from any previous upper left index.
 	
 	\item
-	\mylst!sep upper left slot!
+	\mylst!sep upper left ---!, \mylst!sep upper left slot!
 	
 	Adds a slot to the upper left index,
 	separated from any previous upper left
 	index by the default separator.
 
 	\item
-	\mylst!comma upper left slot!
+	\mylst!comma upper left ---!, \mylst!comma upper left slot!
 	
 	Adds a slot to the upper left index,
 	separated from any previous upper left
@@ -4598,6 +4605,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!upper left --- with other sep={$\<separator\>$}!,\\
 	\mylst!upper left slot with other sep={$\<separator\>$}!
 	
 	
@@ -4780,20 +4788,20 @@ In the following sections, we include the full list.
 	any prevous lower left index by~\<separator\>.
 	
 	\item
-	\mylst!lower left slot!
+	\mylst!lower left ---!, \mylst!lower left slot!
 	
 	Adds a slot to the lower left index,
 	with no separator from any previous lower left index.
 	
 	\item
-	\mylst!sep lower left slot!
+	\mylst!sep lower left ---!, \mylst!sep lower left slot!
 	
 	Adds a slot to the lower left index,
 	separated from any previous lower left
 	index by the default separator.
 
 	\item
-	\mylst!comma lower left slot!
+	\mylst!comma lower left ---!, \mylst!comma lower left slot!
 	
 	Adds a slot to the lower left index,
 	separated from any previous lower left
@@ -4806,6 +4814,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!lower left --- with other sep={$\<separator\>$}!,\\
 	\mylst!lower left slot with other sep={$\<separator\>$}!
 	
 	
@@ -4988,20 +4997,20 @@ In the following sections, we include the full list.
 	any prevous \lstinline!d!-index by~\<separator\>.
 	
 	\item
-	\mylst!d slot!
+	\mylst!d ---!, \mylst!d slot!
 	
 	Adds a slot to the \lstinline!d!-index,
 	with no separator from any previous \lstinline!d!-index.
 	
 	\item
-	\mylst!sep d slot!
+	\mylst!sep d ---!, \mylst!sep d slot!
 	
 	Adds a slot to the \lstinline!d!-index,
 	separated from any previous  \lstinline!d!-index
 	by the default separator.
 
 	\item
-	\mylst!comma d slot!
+	\mylst!comma d ---!, \mylst!comma d slot!
 	
 	Adds a slot to the \lstinline!d!-index,
 	separated from any previous  \lstinline!d!-index
@@ -5014,6 +5023,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!d --- with other sep={$\<separator\>$}!,
 	\mylst!d slot with other sep={$\<separator\>$}!
 		
 	Adds a slot to the \lstinline!d!-index, separated
@@ -5195,20 +5205,20 @@ In the following sections, we include the full list.
 	any prevous \lstinline!i!-index by~\<separator\>.
 	
 	\item
-	\mylst!i slot!
+	\mylst!i ---!, \mylst!i slot!
 	
 	Adds a slot to the \lstinline!i!-index,
 	with no separator from any previous \lstinline!i!-index.
 	
 	\item
-	\mylst!sep i slot!
+	\mylst!sep i ---!, \mylst!sep i slot!
 	
 	Adds a slot to the \lstinline!i!-index,
 	separated from any previous \lstinline!i!-index
 	by the default separator.
 
 	\item
-	\mylst!comma i slot!
+	\mylst!comma i ---!, \mylst!comma i slot!
 	
 	Adds a slot to the \lstinline!i!-index,
 	separated from any previous \lstinline!i!-index
@@ -5221,6 +5231,7 @@ In the following sections, we include the full list.
 	By default, this is~\lstinline!{-}!.
 	
 	\item
+	\mylst!i --- with other sep={$\<separator\>$}!,
 	\mylst!i slot with other sep={$\<separator\>$}!
 	
 	
@@ -5445,14 +5456,14 @@ These are the predefined keys that work inside the argument.
 	by a comma.
 	
 	\item
-	\mylst!slot!
+	\mylst!---!, \mylst!slot!
 	
 	Adds a slot to the argument,
 	separated from any previous argument
 	by the default separator.
 	
 	\item
-	\mylst!comma slot!
+	\mylst!comma ---!, \mylst!comma slot!
 	
 	Adds a slot to the argument,
 	separated from any previous argument
@@ -5480,6 +5491,7 @@ These are the predefined keys that work inside the argument.
 	by~\<separator\>.
 	
 	\item
+	\mylst!--- with other sep={$\<separator\>$}!,
 	\mylst!slot with other sep={$\<separator\>$}!
 	
 	Adds a slot to the argument, separated

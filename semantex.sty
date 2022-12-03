@@ -1,5 +1,5 @@
 \RequirePackage{xparse,l3keys2e,leftindex,semtex}
-\ProvidesExplPackage{semantex}{2022/10/04}{0.522}{}
+\ProvidesExplPackage{semantex}{2022/12/03}{0.523}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %															%
@@ -10,7 +10,7 @@
 %															%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\tl_set:Nn\SemantexVersion{0.522}
+\tl_set:Nn\SemantexVersion{0.523}
 
 \cs_set_eq:NN \semantex_keyval_parse:NNn \keyval_parse:NNn
 \cs_set:Npn \semantex_singlekey_parse:Nn#1#2 { \clist_map_function:nN { #2 } #1 }
@@ -7072,6 +7072,7 @@
 		{dots}{sep~i~dots},
 		{...}{dots},
 		{slot}{sep~i~slot},
+		{---}{slot},
 		{*}{sep~d~*},
 		{**}{sep~d~**},
 	},
@@ -7101,12 +7102,14 @@
 	data~provide=pre~arg,
 	data~provide=post~arg,
 	define~keys={
-		{arg~dots}{set~arg~keys={...}},
-		{arg~...}{set~arg~keys={dots}},
+		{arg~dots}{set~arg~keys={dots}},
+		{arg~...}{set~arg~keys={...}},
 		{comma~arg~dots}{set~arg~keys={comma~dots}},
 		{comma~arg~...}{set~arg~keys={comma~...}},
 		{arg~slot}{set~arg~keys={slot}},
+		{arg~---}{set~arg~keys={---}},
 		{comma~arg~slot}{set~arg~keys={comma~slot}},
+		{comma~arg~---}{set~arg~keys={comma~---}},
 		{clear~arg}{ execute={
 				\semantex_data_tl_clear:nn { ##1 } { arg }
 				\semantex_data_int_clear:nn { ##1 } { number~of~arguments }
@@ -7303,8 +7306,9 @@
 		{sep~arg}{set~arg~keys={sep={#1}}},
 		{comma~arg}{set~arg~keys={comma={#1}}},
 		{arg~dots~with~other~sep}{set~arg~keys={dots~with~other~sep={#1}}},
-		{arg~...~with~other~sep}{set~arg~keys={dots~with~other~sep={#1}}},
+		{arg~...~with~other~sep}{set~arg~keys={...~with~other~sep={#1}}},
 		{arg~slot~with~other~sep}{set~arg~keys={slot~with~other~sep={#1}}},
+		{arg~---~with~other~sep}{set~arg~keys={---~with~other~sep={#1}}},
 	},
 	define~keys[2]={
 		{arg~with~other~sep}{set~arg~keys={other~sep={#1}{#2}}},
@@ -7380,8 +7384,11 @@
 	data~provide=post~upper,
 	define~keys={
 		{upper~slot}{ set~keys~x={ upper=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~slot } } },
+		{upper~---}{upper~slot},
 		{sep~upper~slot}{ set~keys~x={ sep~upper=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~slot } } },
+		{sep~upper~---}{sep~upper~slot},
 		{comma~upper~slot}{ set~keys~x={ comma~upper=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~slot } } },
+		{comma~upper~---}{comma~upper~slot},
 		{upper~dots}{ set~keys~x={ upper=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~dots } } },
 		{upper~...}{upper~dots},
 		{sep~upper~dots}{ set~keys~x={ sep~upper=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~dots } } },
@@ -7503,6 +7510,15 @@
 				}
 			},
 		},
+		{upper~---~with~other~sep}{
+			execute={
+				\semantex_valuekey:nnx { ##1 } { upper~with~other~sep }
+				{
+					{ \exp_not:n { #1 } }
+					{ \semantex_data_tl_get_exp_not:nn { ##1 } { upper~slot } }
+				}
+			},
+		},
 		{set~upper~dots}{
 			execute={ \semantex_data_tl_set:nnn { ##1 } { upper~dots } { #1 } },
 		},
@@ -7567,8 +7583,11 @@
 	data~provide=post~lower,
 	define~keys={
 		{lower~slot}{ set~keys~x={ lower=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~slot } } },
+		{lower~---}{lower~slot},
 		{sep~lower~slot}{ set~keys~x={ sep~lower=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~slot } } },
+		{sep~lower~---}{sep~lower~slot},
 		{comma~lower~slot}{ set~keys~x={ comma~lower=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~slot } } },
+		{comma~lower~---}{comma~lower~slot},
 		{lower~dots}{ set~keys~x={ lower=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~dots } } },
 		{lower~...}{lower~dots},
 		{sep~lower~dots}{ set~keys~x={ sep~lower=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~dots } } },
@@ -7689,6 +7708,15 @@
 				}
 			},
 		},
+		{lower~---~with~other~sep}{
+			execute={
+				\semantex_valuekey:nnx { ##1 } { lower~with~other~sep }
+				{
+					{ \exp_not:n { #1 } }
+					{ \semantex_data_tl_get_exp_not:nn { ##1 } { lower~slot } }
+				}
+			},
+		},
 		{set~lower~dots}{
 			execute={ \semantex_data_tl_set:nnn { ##1 } { lower~dots } { #1 } },
 		},
@@ -7753,8 +7781,11 @@
 	data~provide=post~upper~left,
 	define~keys={
 		{upper~left~slot}{ set~keys~x={ upper~left=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~slot } } },
+		{upper~left~---}{upper~left~slot},
 		{sep~upper~left~slot}{ set~keys~x={ sep~upper~left=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~slot } } },
+		{sep~upper~left~---}{sep~upper~left~slot},
 		{comma~upper~left~slot}{ set~keys~x={ comma~upper~left=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~slot } } },
+		{comma~upper~left~---}{comma~upper~left~slot},
 		{upper~left~dots}{ set~keys~x={ upper~left=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~dots } } },
 		{upper~left~...}{upper~left~dots},
 		{sep~upper~left~dots}{ set~keys~x={ sep~upper~left=\semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~dots } } },
@@ -7875,6 +7906,15 @@
 				}
 			},
 		},
+		{upper~left~---~with~other~sep}{
+			execute={
+				\semantex_valuekey:nnx { ##1 } { upper~left~with~other~sep }
+				{
+					{ \exp_not:n { #1 } }
+					{ \semantex_data_tl_get_exp_not:nn { ##1 } { upper~left~slot } }
+				}
+			},
+		},
 		{set~upper~left~dots}{
 			execute={ \semantex_data_tl_set:nnn { ##1 } { upper~left~dots } { #1 } },
 		},
@@ -7939,8 +7979,11 @@
 	data~provide=post~lower~left,
 	define~keys={
 		{lower~left~slot}{ set~keys~x={ lower~left=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~slot } } },
+		{lower~left~---}{lower~left~slot},
 		{sep~lower~left~slot}{ set~keys~x={ sep~lower~left=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~slot } } },
+		{sep~lower~left~---}{sep~lower~left~slot},
 		{comma~lower~left~slot}{ set~keys~x={ comma~lower~left=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~slot } } },
+		{comma~lower~left~---}{comma~lower~left~slot},
 		{lower~left~dots}{ set~keys~x={ lower~left=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~dots } } },
 		{lower~left~...}{lower~left~dots},
 		{sep~lower~left~dots}{ set~keys~x={ sep~lower~left=\semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~dots } } },
@@ -8061,6 +8104,15 @@
 				}
 			},
 		},
+		{lower~left~---~with~other~sep}{
+			execute={
+				\semantex_valuekey:nnx { ##1 } { lower~left~with~other~sep }
+				{
+					{ \exp_not:n { #1 } }
+					{ \semantex_data_tl_get_exp_not:nn { ##1 } { lower~left~slot } },
+				}
+			},
+		},
 		{set~lower~left~dots}{
 			execute={ \semantex_data_tl_set:nnn { ##1 } { lower~left~dots } { #1 } },
 		},
@@ -8124,16 +8176,19 @@
 				{ upper~slot }
 				{ lower~slot },
 		},
+		{d~---}{d~slot},
 		{sep~d~slot}{
 			bool~if~TF={upper~grading}
 				{ sep~upper~slot }
 				{ sep~lower~slot },
 		},
+		{sep~d~---}{sep~d~slot},
 		{comma~d~slot}{
 			bool~if~TF={upper~grading}
 				{ comma~upper~slot }
 				{ comma~lower~slot },
 		},
+		{comma~d~---}{comma~d~slot},
 		{d~dots}{
 			bool~if~TF={upper~grading}
 				{ upper~dots }
@@ -8283,6 +8338,15 @@
 				lower~slot~with~other~sep={#1},
 			},
 		},
+		{d~---~with~other~sep}{
+			bool~if~TF={upper~grading}
+			{
+				upper~---~with~other~sep={#1},
+			}
+			{
+				lower~---~with~other~sep={#1},
+			},
+		},
 		{set~d~dots}{
 			bool~if~TF={upper~grading}
 			{
@@ -8302,7 +8366,13 @@
 			},
 		},
 		{d~...~with~other~sep}{
-			d~dots~with~other~sep={#1},
+			bool~if~TF={upper~grading}
+			{
+				upper~...~with~other~sep={#1},
+			}
+			{
+				lower~...~with~other~sep={#1},
+			},
 		},
 		{d~*~with~other~sep}{
 			bool~if~TF={upper~grading}
@@ -8369,16 +8439,19 @@
 				{ lower~slot }
 				{ upper~slot },
 		},
+		{i~---}{i~slot},
 		{sep~i~slot}{
 			bool~if~TF={upper~grading}
 				{ sep~lower~slot }
 				{ sep~upper~slot },
 		},
+		{sep~i~---}{sep~i~slot},
 		{comma~i~slot}{
 			bool~if~TF={upper~grading}
 				{ comma~lower~slot }
 				{ comma~upper~slot },
 		},
+		{comma~i~---}{comma~i~slot},
 		{i~dots}{
 			bool~if~TF={upper~grading}
 				{ lower~dots }
@@ -8527,6 +8600,15 @@
 				upper~slot~with~other~sep={#1},
 			},
 		},
+		{i~---~with~other~sep}{
+			bool~if~TF={upper~grading}
+			{
+				lower~---~with~other~sep={#1},
+			}
+			{
+				upper~---~with~other~sep={#1},
+			},
+		},
 		{set~i~dots}{
 			bool~if~TF={upper~grading}
 			{
@@ -8546,7 +8628,13 @@
 			},
 		},
 		{i~...~with~other~sep}{
-			i~dots~with~other~sep={#1},
+			bool~if~TF={upper~grading}
+			{
+				lower~...~with~other~sep={#1},
+			}
+			{
+				upper~...~with~other~sep={#1},
+			},
 		},
 		{i~*~with~other~sep}{
 			bool~if~TF={upper~grading}
@@ -8712,7 +8800,6 @@
 		{set~arg~without~keyval~x}{ execute={ \semantex_arg_without_keyval:nx { ##1 } { #1 } } },
 		{arg~without~keyval~set~x}{ execute={ \semantex_arg_without_keyval:nx { ##1 } { #1 } } },
 		{default}{sep={#1}},
-		{...~with~other~sep}{dots~with~other~sep={#1}},
 		{sep}{
 			execute={
 				\semantex_data_bool_get:nnTF { ##1 } { next~arg~with~sep }
@@ -8752,6 +8839,7 @@
 				}
 			},
 		},
+		{...~with~other~sep}{dots~with~other~sep={#1}},
 		{slot~with~other~sep}{
 			execute={
 				\semantex_arg_valuekey:nnx { ##1 } { other~sep }
@@ -8761,6 +8849,7 @@
 				}
 			},
 		},
+		{---~with~other~sep}{slot~with~other~sep={#1}},
 	},
 	define~arg~keys={
 		{dots}{
@@ -8789,6 +8878,7 @@
 				}
 			},
 		},
+		{---}{slot},
 		{comma~slot}{
 			execute={
 				\semantex_arg_valuekey:nnx { ##1 } { comma }
@@ -8797,6 +8887,7 @@
 				}
 			},
 		},
+		{comma~---}{comma~slot},
 	},
 	define~arg~keys[2]={
 		{other~sep}{
