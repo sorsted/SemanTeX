@@ -1,5 +1,5 @@
 \RequirePackage{xparse,l3keys2e,leftindex,semtex}
-\ProvidesExplPackage{semantex}{2022/12/03}{0.523}{}
+\ProvidesExplPackage{semantex}{2023/01/23}{0.525}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %															%
@@ -10,7 +10,7 @@
 %															%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\tl_set:Nn\SemantexVersion{0.523}
+\tl_set:Nn\SemantexVersion{0.525}
 
 \cs_set_eq:NN \semantex_keyval_parse:NNn \keyval_parse:NNn
 \cs_set:Npn \semantex_singlekey_parse:Nn#1#2 { \clist_map_function:nN { #2 } #1 }
@@ -322,7 +322,7 @@
 			}
 		}
 		{
-			\semantex_new_object:NNnn #1 ##1 {
+			\semantex_new_object_and_do:NNnn #1 ##1 {
 				\semantex_object_set_keys:Nn ##1 { ##3 }
 			}
 			{
@@ -347,7 +347,7 @@
 			}
 		}
 		{
-			\semantex_declare_object:NNnn #1 ##1 {
+			\semantex_declare_object_and_do:NNnn #1 ##1 {
 				\semantex_object_set_keys:Nn ##1 { ##3 }
 			}
 			{
@@ -8812,6 +8812,13 @@
 				{
 					% do nothing
 				}
+				\semantex_data_tl_put_right:nnn { ##1 } { arg } { #1 }
+				\semantex_data_int_incr:nn { ##1 } { number~of~arguments }
+				\semantex_data_bool_set_true:nn { ##1 } { next~arg~with~sep }
+			}
+		},
+		{no~sep}{
+			execute={
 				\semantex_data_tl_put_right:nnn { ##1 } { arg } { #1 }
 				\semantex_data_int_incr:nn { ##1 } { number~of~arguments }
 				\semantex_data_bool_set_true:nn { ##1 } { next~arg~with~sep }
